@@ -36,6 +36,11 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
     queryFn: () => base44.entities.StockMovement.list("-created_date", 500),
   });
 
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: () => base44.entities.Supplier.list(),
+  });
+
   const suggestions = useMemo(() => {
     if (!movements.length || !inventoryItems.length) return [];
     const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
