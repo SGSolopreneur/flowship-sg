@@ -217,8 +217,8 @@ export default function Transfers() {
                 icon={Truck}
                 title="No transfer orders"
                 description="Create your first transfer to move stock from warehouse to stores"
-                actionLabel="New Transfer"
-                onAction={() => setDialogOpen(true)}
+                actionLabel={canWrite ? "New Transfer" : undefined}
+                onAction={canWrite ? () => setDialogOpen(true) : undefined}
               />
             ) : (
               <div className="overflow-x-auto">
