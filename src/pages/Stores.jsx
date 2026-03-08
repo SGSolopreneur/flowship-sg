@@ -100,14 +100,16 @@ export default function Stores() {
                   </div>
                 )}
               </div>
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <Button variant="outline" size="sm" className="text-xs flex-1" onClick={() => { setEditStore(store); setDialogOpen(true); }}>
-                  <Pencil className="w-3 h-3 mr-1" /> Edit
-                </Button>
-                <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => deleteMutation.mutate(store.id)}>
-                  <Trash2 className="w-3 h-3" />
-                </Button>
-              </div>
+              {canWrite && (
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
+                  <Button variant="outline" size="sm" className="text-xs flex-1" onClick={() => { setEditStore(store); setDialogOpen(true); }}>
+                    <Pencil className="w-3 h-3 mr-1" /> Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => deleteMutation.mutate(store.id)}>
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>
