@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shared/useRole";
+import { base44 } from "@/api/base44Client";
 
 // sensitive: true = only admin + manager can see
 const navItems = [
