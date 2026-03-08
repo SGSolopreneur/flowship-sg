@@ -78,27 +78,29 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 px-3 space-y-1">
-          {navItems.map((item) => {
-            const isActive = currentPageName === item.page;
-            return (
-              <Link
-                key={item.page}
-                to={createPageUrl(item.page)}
-                onClick={() => setSidebarOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                  isActive
-                    ? "bg-emerald-500/15 text-emerald-400"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <item.icon className={cn("w-[18px] h-[18px]", isActive && "text-emerald-400")} />
-                <span>{item.name}</span>
-                {isActive && <ChevronRight className="w-4 h-4 ml-auto text-emerald-400/50" />}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+          {navItems
+            .filter(item => !item.sensitive || canAccessSensitive)
+            .map((item) => {
+              const isActive = currentPageName === item.page;
+              return (
+                <Link
+                  key={item.page}
+                  to={createPageUrl(item.page)}
+                  onClick={() => setSidebarOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-emerald-500/15 text-emerald-400"
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  <item.icon className={cn("w-[18px] h-[18px]", isActive && "text-emerald-400")} />
+                  <span>{item.name}</span>
+                  {isActive && <ChevronRight className="w-4 h-4 ml-auto text-emerald-400/50" />}
+                </Link>
+              );
+            })}
         </nav>
 
         {/* Footer */}
