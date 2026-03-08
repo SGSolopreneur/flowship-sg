@@ -177,6 +177,22 @@ export default function Inventory() {
         )}
       </div>
 
+      {scannerOpen && (
+        <BarcodeScanner
+          onDetected={handleBarcodeDetected}
+          onClose={() => setScannerOpen(false)}
+        />
+      )}
+
+      <StockUpdateDialog
+        open={!!stockUpdateItem}
+        onOpenChange={(open) => { if (!open) setStockUpdateItem(null); }}
+        inventoryItem={stockUpdateItem}
+        product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
+        onSave={handleStockUpdate}
+        saving={updateMutation.isPending}
+      />
+
       <InventoryFormDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
