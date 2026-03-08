@@ -175,15 +175,15 @@ export default function Transfers() {
               )}
             </TabsTrigger>
           </TabsList>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50">
-              <ScanLine className="w-4 h-4 mr-1.5" /> Scan
+              <ScanLine className="w-4 h-4 mr-1.5" /><span className="hidden sm:inline">Scan</span>
             </Button>
-            <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
-              <ClipboardList className="w-4 h-4 mr-1.5" /> Request Stock
+            <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50 flex-1 sm:flex-none">
+              <ClipboardList className="w-4 h-4 mr-1.5" /> <span className="sm:inline">Request Stock</span>
             </Button>
             {canWrite && (
-              <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none">
                 <Plus className="w-4 h-4 mr-1.5" /> New Transfer
               </Button>
             )}
