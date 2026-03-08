@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Warehouse,
   BarChart2,
-  Building2
+  Building2,
+  TrendingUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
