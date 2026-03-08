@@ -5,18 +5,43 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 
 export default function LowStockAlert({ items, products }) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
   const getProduct = (productId) => products.find(p => p.id === productId);
 
   const lowStockItems = items.filter(item => {
     const product = getProduct(item.product_id);
     return product && item.quantity <= (product.min_stock_level || 10);
-  }).slice(0, 6);
+  }).slice(0, 8);
+
+  const handleSendAlert = async () => {
+    setSending(true);
+    try {
+      const payload = lowStockItems.map(item => {
+        const product = getProduct(item.product_id);
+        return {
+          product_name: item.product_name,
+          sku: item.sku,
+          location_name: item.location_name,
+          quantity: item.quantity,
+          minLevel: product?.min_stock_level || 10,
+          unit: product?.unit || 'pcs',
+        };
+      });
+      await base44.functions.invoke('sendLowStockAlert', { items: payload });
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+    } finally {
+      setSending(false);
+    }
+  };
 
   if (lowStockItems.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-slate-200/80 p-5">
         <h3 className="text-sm font-semibold text-slate-800 mb-3">Low Stock Alerts</h3>
-        <p className="text-sm text-slate-400 text-center py-6">All stock levels are healthy</p>
+        <p className="text-sm text-slate-400 text-center py-6">All stock levels are healthy ✓</p>
       </div>
     );
   }
@@ -55,6 +80,23 @@ export default function LowStockAlert({ items, products }) {
             </div>
           );
         })}
+      </div>
+      <div className="mt-4 pt-3 border-t border-slate-100">
+        <Button
+          size="sm"
+          variant="outline"
+          className="w-full text-xs gap-1.5"
+          onClick={handleSendAlert}
+          disabled={sending || sent}
+        >
+          {sent ? (
+            <><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Alert sent to your email</>
+          ) : sending ? (
+            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Sending…</>
+          ) : (
+            <><Mail className="w-3.5 h-3.5" /> Email replenishment alert</>
+          )}
+        </Button>
       </div>
     </div>
   );
