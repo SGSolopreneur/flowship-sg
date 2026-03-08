@@ -114,7 +114,12 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
         products,
         suppliers,
       });
-      setSubmitted(res.data?.po_number);
+      setSubmitted({
+        po_number: res.data?.po_number,
+        flagged: res.data?.flagged,
+        flagged_reason: res.data?.flagged_reason,
+        status: res.data?.status,
+      });
     } finally {
       setSubmitting(false);
     }
