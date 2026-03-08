@@ -275,6 +275,9 @@ export default function Transfers() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => setPickingOrder(order)}>
+                                <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Picking List
+                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => setVerifierOrder(order)}>
                                 <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify Shipment
                               </DropdownMenuItem>
