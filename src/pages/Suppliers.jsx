@@ -110,7 +110,7 @@ export default function Suppliers() {
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-slate-200/80 p-4 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
             <Building2 className="w-4.5 h-4.5 text-emerald-600" />
