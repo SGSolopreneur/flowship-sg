@@ -164,7 +164,7 @@ export default function DriverDashboard() {
                   onUpdateLocation={(coords) =>
                     handleUpdateLocation(transfer.id, vehicle?.id, coords)
                   }
-                  onConfirmDelivery={() => handleConfirmDelivery(transfer.id)}
+                  onConfirmDelivery={(confirmData) => handleConfirmDelivery(transfer.id, confirmData)}
                   updating={updatingTask === transfer.id}
                   confirming={confirmingTask === transfer.id}
                 />
@@ -191,7 +191,7 @@ export default function DriverDashboard() {
                   onUpdateLocation={(coords) =>
                     handleUpdateLocation(transfer.id, vehicle?.id, coords)
                   }
-                  onConfirmDelivery={() => handleConfirmDelivery(transfer.id)}
+                  onConfirmDelivery={(confirmData) => handleConfirmDelivery(transfer.id, confirmData)}
                   updating={updatingTask === transfer.id}
                   confirming={confirmingTask === transfer.id}
                 />
