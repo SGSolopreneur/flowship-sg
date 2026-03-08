@@ -203,7 +203,7 @@ export default function Transfers() {
               <ClipboardList className="w-4 h-4 mr-1.5" /> <span className="sm:inline">Request Stock</span>
             </Button>
             {canWrite && (
-              <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none">
+              <Button onClick={() => setFormOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none">
                 <Plus className="w-4 h-4 mr-1.5" /> New Transfer
               </Button>
             )}
@@ -238,7 +238,7 @@ export default function Transfers() {
                 title="No transfer orders"
                 description="Create your first transfer to move stock from warehouse to stores"
                 actionLabel="New Transfer"
-                onAction={() => setDialogOpen(true)}
+                onAction={() => setFormOpen(true)}
               />
             ) : (
               <div className="overflow-x-auto">
@@ -272,7 +272,7 @@ export default function Transfers() {
                         <TableCell className="text-xs text-slate-500">
                           {order.requested_delivery_date ? format(new Date(order.requested_delivery_date), "dd MMM yyyy") : "—"}
                         </TableCell>
-                        <TableCell className="text-xs text-slate-500">{order.vehicle_number || "—"}</TableCell>
+                        <TableCell className="text-xs text-slate-500">{order.vehicle_plate_number || "—"}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -333,12 +333,13 @@ export default function Transfers() {
       </Tabs>
 
       <TransferFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={formOpen}
+        onOpenChange={setFormOpen}
         stores={stores}
         products={products}
-        onSave={(data) => createMutation.mutate(data)}
-        saving={createMutation.isPending}
+        vehicles={vehicles}
+        onSave={handleCreateTransfer}
+        saving={createTransferMutation.isPending}
       />
 
       <StockRequestFormDialog
