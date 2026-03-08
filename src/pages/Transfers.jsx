@@ -173,6 +173,40 @@ export default function Transfers() {
     }
   };
 
+  const handleCreateTransfer = async (orderData) => {
+    const vehicle = vehicles.find(v => v.id === orderData.vehicle_id);
+    if (!vehicle) {
+      alert("Please select a vehicle");
+      return;
+    }
+
+    let totalWeight = 0;
+    let totalVolume = 0;
+    orderData.items.forEach(item => {
+      const product = products.find(p => p.id === item.product_id);
+      if (product) {
+        totalWeight += item.quantity_requested * 0.5;
+        totalVolume += item.quantity_requested * 0.01;
+      }
+    });
+
+    if (totalWeight > vehicle.weight_capacity_kg || totalVolume > vehicle.volume_capacity_m3) {
+      setCapacityWarning({
+        vehicle,
+        totalWeight,
+        totalVolume,
+      });
+      return;
+    }
+
+    createTransferMutation.mutate({
+      ...orderData,
+      total_weight_kg: totalWeight,
+      total_volume_m3: totalVolume,
+    });
+    setFormOpen(false);
+  };
+
   const pendingCount = stockRequests.filter(r => r.status === "pending_approval").length;
 
   return (
