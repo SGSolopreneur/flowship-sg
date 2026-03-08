@@ -234,6 +234,12 @@ export default function Inventory() {
         )}
       </div>
 
+      <StockMovementHistory
+        open={!!historyItem}
+        onOpenChange={(open) => { if (!open) setHistoryItem(null); }}
+        inventoryItem={historyItem}
+      />
+
       {scannerOpen && (
         <BarcodeScanner
           onDetected={handleBarcodeDetected}
