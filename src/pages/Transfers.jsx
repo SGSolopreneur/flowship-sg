@@ -258,6 +258,9 @@ export default function Transfers() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => setVerifierOrder(order)}>
+                                <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify Shipment
+                              </DropdownMenuItem>
                               {order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
                                 <DropdownMenuItem onClick={() => advanceStatus(order)}>
                                   Move to {getNextStatusLabel(order.status)}
