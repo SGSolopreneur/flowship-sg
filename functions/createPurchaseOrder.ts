@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { suggestions, procurementEmail, products } = await req.json();
+    const { suggestions, procurementEmail, products, suppliers } = await req.json();
 
     if (!suggestions?.length) {
       return Response.json({ error: 'No suggestions provided' }, { status: 400 });
