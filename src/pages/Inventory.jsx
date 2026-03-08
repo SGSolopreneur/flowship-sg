@@ -13,6 +13,7 @@ import InventoryFormDialog from "../components/inventory/InventoryFormDialog";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
 import StockMovementHistory from "../components/inventory/StockMovementHistory";
+import { useRole } from "../components/shared/useRole";
 
 export default function Inventory() {
   const [search, setSearch] = useState("");
