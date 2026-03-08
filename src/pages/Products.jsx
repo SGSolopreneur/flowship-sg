@@ -64,9 +64,11 @@ export default function Products() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4 mr-1.5" /> Add Product
-        </Button>
+        {canWrite && (
+          <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Product
+          </Button>
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
