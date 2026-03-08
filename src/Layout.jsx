@@ -22,6 +22,7 @@ import { useRole } from "@/components/shared/useRole";
 // sensitive: only admin + manager can see
 const navItems = [
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard", sensitive: false },
+  { name: "My Deliveries", icon: Truck, page: "DriverDashboard", sensitive: false },
   { name: "Inventory", icon: Package, page: "Inventory", sensitive: false },
   { name: "Products", icon: ShoppingCart, page: "Products", sensitive: false },
   { name: "Stores", icon: Store, page: "Stores", sensitive: false },
