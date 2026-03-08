@@ -55,6 +55,7 @@ import Stores from './pages/Stores';
 import SupplierPerformance from './pages/SupplierPerformance';
 import Suppliers from './pages/Suppliers';
 import Transfers from './pages/Transfers';
+import Vehicles from './pages/Vehicles';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "SupplierPerformance": SupplierPerformance,
     "Suppliers": Suppliers,
     "Transfers": Transfers,
+    "Vehicles": Vehicles,
 }
 
 export const pagesConfig = {

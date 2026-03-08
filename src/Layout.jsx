@@ -26,6 +26,7 @@ const navItems = [
   { name: "Products", icon: ShoppingCart, page: "Products", sensitive: false },
   { name: "Stores", icon: Store, page: "Stores", sensitive: false },
   { name: "Transfers", icon: Truck, page: "Transfers", sensitive: false },
+  { name: "Vehicles", icon: Truck, page: "Vehicles", sensitive: false },
   { name: "Suppliers", icon: Building2, page: "Suppliers", sensitive: true },
   { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance", sensitive: true },
   { name: "Analytics", icon: BarChart2, page: "Analytics", sensitive: true },
