@@ -64,9 +64,44 @@ export default function Inventory() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["inventory"] }),
   });
 
+  const logMovement = (item, newQty, mode, source) => {
+    const before = item.quantity || 0;
+    const after = newQty;
+    let adjustmentType;
+    if (mode === "add") adjustmentType = "in";
+    else if (mode === "remove") adjustmentType = "out";
+    else adjustmentType = "reset";
+
+    logMovementMutation.mutate({
+      inventory_item_id: item.id,
+      product_name: item.product_name,
+      sku: item.sku,
+      location_name: item.location_name,
+      adjustment_type: adjustmentType,
+      quantity_before: before,
+      quantity_change: after - before,
+      quantity_after: after,
+      source,
+      performed_by: currentUser?.email || "unknown",
+    });
+  };
+
   const handleSave = (formData) => {
-    if (editItem) updateMutation.mutate({ id: editItem.id, data: formData });
-    else createMutation.mutate(formData);
+    if (editItem) {
+      const prevQty = editItem.quantity || 0;
+      const newQty = formData.quantity ?? prevQty;
+      updateMutation.mutate({ id: editItem.id, data: formData });
+      if (newQty !== prevQty) {
+        logMovement(
+          editItem,
+          newQty,
+          newQty > prevQty ? "add" : newQty < prevQty ? "remove" : "set",
+          "form_update"
+        );
+      }
+    } else {
+      createMutation.mutate(formData);
+    }
   };
 
   const handleBarcodeDetected = (code) => {
