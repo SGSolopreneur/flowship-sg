@@ -301,8 +301,8 @@ export default function Transfers() {
             </div>
             <ApprovalPanel
               requests={stockRequests}
-              onApprove={handleApprove}
-              onReject={handleReject}
+              onApprove={isManager ? handleApprove : undefined}
+              onReject={isManager ? handleReject : undefined}
               saving={updateRequestMutation.isPending}
             />
           </div>
