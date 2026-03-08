@@ -7,6 +7,7 @@ import LowStockAlert from "../components/dashboard/LowStockAlert";
 import RecentTransfers from "../components/dashboard/RecentTransfers";
 import CategoryBreakdown from "../components/dashboard/CategoryBreakdown";
 import ReorderSuggestions from "../components/dashboard/ReorderSuggestions";
+import ExpiryAlert from "../components/dashboard/ExpiryAlert";
 
 export default function Dashboard() {
   const { data: products = [] } = useQuery({
