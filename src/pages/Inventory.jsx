@@ -9,6 +9,7 @@ import { Plus, Search, Pencil, Trash2, Package, ScanLine, History } from "lucide
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
+import { useRole } from "../components/shared/useRole";
 import InventoryFormDialog from "../components/inventory/InventoryFormDialog";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
