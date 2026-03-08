@@ -330,9 +330,25 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
                   />
                 </div>
 
+                {previewFlags.reasons.length > 0 && (
+                  <div className="rounded-lg bg-amber-50 border border-amber-200 p-2.5 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700">
+                      <AlertTriangle className="w-3.5 h-3.5" /> Will require manual approval
+                    </div>
+                    {previewFlags.reasons.map((r, i) => (
+                      <p key={i} className="text-[11px] text-amber-600 pl-5">• {r}</p>
+                    ))}
+                  </div>
+                )}
+
                 <div className="rounded-lg bg-slate-50 border border-slate-100 p-2.5 flex items-center justify-between text-xs text-slate-600">
-                  <span>{chosenSuggestions.length} item(s) selected</span>
-                  <span className="font-medium">Status: <span className="text-amber-600">Draft</span></span>
+                  <span>{chosenSuggestions.length} item(s) · SGD {previewFlags.estTotal.toFixed(2)}</span>
+                  <span className="font-medium">
+                    Status:{" "}
+                    <span className={previewFlags.reasons.length > 0 ? "text-amber-600" : "text-emerald-600"}>
+                      {previewFlags.reasons.length > 0 ? "Pending Approval" : "Auto-Submit"}
+                    </span>
+                  </span>
                 </div>
               </div>
 
