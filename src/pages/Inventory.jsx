@@ -313,6 +313,14 @@ export default function Inventory() {
         saving={updateMutation.isPending}
       />
 
+      <CsvImportDialog
+        open={csvImportOpen}
+        onOpenChange={setCsvImportOpen}
+        inventory={inventory}
+        onImport={handleCsvImport}
+        importing={importing}
+      />
+
       <InventoryFormDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
