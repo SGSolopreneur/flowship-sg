@@ -264,19 +264,21 @@ export default function Transfers() {
                               <DropdownMenuItem onClick={() => setVerifierOrder(order)}>
                                 <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify Shipment
                               </DropdownMenuItem>
-                              {order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
+                              {canWrite && order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
                                 <DropdownMenuItem onClick={() => advanceStatus(order)}>
                                   Move to {getNextStatusLabel(order.status)}
                                 </DropdownMenuItem>
                               )}
-                              {order.status !== "delivered" && order.status !== "cancelled" && (
+                              {canWrite && order.status !== "delivered" && order.status !== "cancelled" && (
                                 <DropdownMenuItem onClick={() => cancelOrder(order)} className="text-red-600">
                                   Cancel Order
                                 </DropdownMenuItem>
                               )}
-                              <DropdownMenuItem onClick={() => deleteMutation.mutate(order.id)} className="text-red-600">
-                                <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
-                              </DropdownMenuItem>
+                              {canWrite && (
+                                <DropdownMenuItem onClick={() => deleteMutation.mutate(order.id)} className="text-red-600">
+                                  <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
