@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
+import { useRole } from "../components/shared/useRole";
 import TransferFormDialog from "../components/transfers/TransferFormDialog";
 import StockRequestFormDialog from "../components/transfers/StockRequestFormDialog";
 import ApprovalPanel from "../components/transfers/ApprovalPanel";
