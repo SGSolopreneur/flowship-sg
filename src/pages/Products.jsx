@@ -135,6 +135,12 @@ export default function Products() {
         onSave={handleSave}
         saving={createMutation.isPending || updateMutation.isPending}
       />
+
+      <QRCodeGenerator
+        open={!!qrProduct}
+        onOpenChange={(open) => !open && setQrProduct(null)}
+        product={qrProduct}
+      />
     </div>
   );
 }
