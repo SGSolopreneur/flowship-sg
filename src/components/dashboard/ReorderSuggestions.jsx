@@ -177,13 +177,28 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
                   </span>
                   <span>{s.currentQty} {s.unit} on hand</span>
                 </div>
-                <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
-                    Usage: <strong className="text-slate-700">{s.dailyUsage} {s.unit}/day</strong>
-                  </span>
-                  <span className="text-[11px] font-semibold text-emerald-700">
-                    Reorder → {s.suggestedQty} {s.unit}
-                  </span>
+                <div className="mt-2 pt-2 border-t border-slate-100 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-slate-500">
+                      Usage: <strong className="text-slate-700">{s.dailyUsage} {s.unit}/day</strong>
+                    </span>
+                    <span className="text-[11px] font-semibold text-emerald-700">
+                      Reorder → {s.suggestedQty} {s.unit}
+                    </span>
+                  </div>
+                  {s.supplierName && (
+                    <div className="flex items-center justify-between text-[10px] text-slate-400">
+                      <span className="flex items-center gap-1">
+                        <Building2 className="w-2.5 h-2.5" />{s.supplierName}
+                        {s.leadTimeDays && <span className="text-blue-400">· {s.leadTimeDays}d lead</span>}
+                      </span>
+                      {s.supplierRating && (
+                        <span className="flex items-center gap-0.5 text-amber-500">
+                          <Star className="w-2.5 h-2.5 fill-amber-400" />{s.supplierRating}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             );
