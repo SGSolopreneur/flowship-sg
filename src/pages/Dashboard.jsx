@@ -57,6 +57,7 @@ export default function Dashboard() {
         </div>
         <div className="space-y-4">
           <CategoryBreakdown inventoryItems={warehouseStock} />
+          <ExpiryAlert inventoryItems={inventory} />
           <ReorderSuggestions inventoryItems={inventory} products={products} />
           <LowStockAlert items={warehouseStock} products={products} />
         </div>
