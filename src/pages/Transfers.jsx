@@ -321,6 +321,19 @@ export default function Transfers() {
         onSave={(data) => createRequestMutation.mutate(data)}
         saving={createRequestMutation.isPending}
       />
+
+      <ShipmentVerifier
+        open={!!verifierOrder}
+        onOpenChange={(o) => { if (!o) setVerifierOrder(null); }}
+        transfer={verifierOrder}
+      />
+
+      {scannerOpen && (
+        <BarcodeScanner
+          onDetected={handleBarcodeScan}
+          onClose={() => setScannerOpen(false)}
+        />
+      )}
     </div>
   );
 }
