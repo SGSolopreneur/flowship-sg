@@ -115,13 +115,15 @@ export default function Stores() {
         </div>
       )}
 
-      <StoreFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        store={editStore}
-        onSave={handleSave}
-        saving={createMutation.isPending || updateMutation.isPending}
-      />
+      {canWrite && (
+        <StoreFormDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          store={editStore}
+          onSave={handleSave}
+          saving={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
     </div>
   );
 }
