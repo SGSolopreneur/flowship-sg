@@ -33,6 +33,8 @@ const navItems = [
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { canAccessSensitive, role } = useRole();
+  const visibleNavItems = navItems.filter(item => !item.sensitive || canAccessSensitive);
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
