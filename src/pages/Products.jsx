@@ -8,6 +8,7 @@ import { Plus, Search, Pencil, Trash2, ShoppingCart } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import ProductFormDialog from "../components/products/ProductFormDialog";
+import { useRole } from "../components/shared/useRole";
 
 const categoryLabels = {
   fresh_produce: "Fresh Produce", frozen: "Frozen", dairy: "Dairy", beverages: "Beverages",
