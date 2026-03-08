@@ -17,6 +17,7 @@ import StockRequestFormDialog from "../components/transfers/StockRequestFormDial
 import ApprovalPanel from "../components/transfers/ApprovalPanel";
 import ShipmentVerifier from "../components/transfers/ShipmentVerifier";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
+import { useRole } from "../components/shared/useRole";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
 
