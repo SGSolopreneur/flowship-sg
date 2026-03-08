@@ -17,6 +17,7 @@ export default function Stores() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editStore, setEditStore] = useState(null);
   const queryClient = useQueryClient();
+  const { canWrite } = useRole();
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
