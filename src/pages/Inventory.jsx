@@ -157,6 +157,9 @@ export default function Inventory() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
+                            <ScanLine className="w-3.5 h-3.5 text-emerald-500" />
+                          </Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditItem(item); setDialogOpen(true); }}>
                             <Pencil className="w-3.5 h-3.5 text-slate-500" />
                           </Button>
