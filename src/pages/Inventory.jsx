@@ -179,33 +179,34 @@ export default function Inventory() {
 
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
-      <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
-        <div className="flex gap-3 items-center flex-1">
-          <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-2 items-center">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input placeholder="Search inventory..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
           </div>
           <Tabs value={locFilter} onValueChange={setLocFilter}>
             <TabsList className="bg-slate-100">
               <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-              <TabsTrigger value="warehouse" className="text-xs">Warehouse</TabsTrigger>
-              <TabsTrigger value="store" className="text-xs">Stores</TabsTrigger>
+              <TabsTrigger value="warehouse" className="text-xs hidden sm:inline-flex">Warehouse</TabsTrigger>
+              <TabsTrigger value="warehouse" className="text-xs sm:hidden">WH</TabsTrigger>
+              <TabsTrigger value="store" className="text-xs">Store</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {canWrite && (
-            <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+            <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 flex-1 sm:flex-none">
               <ScanLine className="w-4 h-4 mr-1.5" /> Scan
             </Button>
           )}
           {canWrite && (
-            <Button variant="outline" onClick={() => setCsvImportOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50">
+            <Button variant="outline" onClick={() => setCsvImportOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 sm:flex-none">
               <Upload className="w-4 h-4 mr-1.5" /> Import CSV
             </Button>
           )}
           {canWrite && (
-            <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none">
               <Plus className="w-4 h-4 mr-1.5" /> Add Stock
             </Button>
           )}
