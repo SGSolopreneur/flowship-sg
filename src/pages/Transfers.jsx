@@ -6,11 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import TransferFormDialog from "../components/transfers/TransferFormDialog";
+import StockRequestFormDialog from "../components/transfers/StockRequestFormDialog";
+import ApprovalPanel from "../components/transfers/ApprovalPanel";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
 
