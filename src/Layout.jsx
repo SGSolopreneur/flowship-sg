@@ -13,19 +13,22 @@ import {
   Warehouse,
   BarChart2,
   Building2,
-  TrendingUp
+  TrendingUp,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRole } from "@/components/shared/useRole";
 
+// sensitive: only admin + manager can see
 const navItems = [
-  { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
-  { name: "Inventory", icon: Package, page: "Inventory" },
-  { name: "Products", icon: ShoppingCart, page: "Products" },
-  { name: "Stores", icon: Store, page: "Stores" },
-  { name: "Suppliers", icon: Building2, page: "Suppliers" },
-  { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance" },
-  { name: "Transfers", icon: Truck, page: "Transfers" },
-  { name: "Analytics", icon: BarChart2, page: "Analytics" },
+  { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard", sensitive: false },
+  { name: "Inventory", icon: Package, page: "Inventory", sensitive: false },
+  { name: "Products", icon: ShoppingCart, page: "Products", sensitive: false },
+  { name: "Stores", icon: Store, page: "Stores", sensitive: false },
+  { name: "Transfers", icon: Truck, page: "Transfers", sensitive: false },
+  { name: "Suppliers", icon: Building2, page: "Suppliers", sensitive: true },
+  { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance", sensitive: true },
+  { name: "Analytics", icon: BarChart2, page: "Analytics", sensitive: true },
 ];
 
 export default function Layout({ children, currentPageName }) {
