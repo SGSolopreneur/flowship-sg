@@ -102,7 +102,29 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
     setSelectedItems(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const APPROVAL_THRESHOLD_SGD = 5000;
+  const LOW_RATING_THRESHOLD = 3.0;
+
   const chosenSuggestions = suggestions.filter(s => selectedItems[s.id]);
+
+  // Preview flags for the dialog
+  const previewFlags = useMemo(() => {
+    const reasons = [];
+    const estTotal = chosenSuggestions.reduce((sum, s) => {
+      const p = products.find(p => p.id === s.product_id);
+      return sum + (p?.unit_cost || 0) * s.suggestedQty;
+    }, 0);
+    if (estTotal > APPROVAL_THRESHOLD_SGD) {
+      reasons.push(`Estimated total SGD ${estTotal.toFixed(2)} exceeds the SGD ${APPROVAL_THRESHOLD_SGD.toFixed(2)} auto-approval threshold`);
+    }
+    const lowRated = chosenSuggestions
+      .filter(s => s.supplierRating !== null && s.supplierRating < LOW_RATING_THRESHOLD)
+      .map(s => `${s.supplierName} (${s.supplierRating}/5)`);
+    if (lowRated.length > 0) {
+      reasons.push(`Low-rated supplier(s): ${[...new Set(lowRated)].join(', ')}`);
+    }
+    return { reasons, estTotal };
+  }, [chosenSuggestions, products]);
 
   const handleSubmit = async () => {
     if (!chosenSuggestions.length) return;
