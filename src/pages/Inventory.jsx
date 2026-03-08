@@ -53,6 +53,25 @@ export default function Inventory() {
     else createMutation.mutate(formData);
   };
 
+  const handleBarcodeDetected = (code) => {
+    setScannerOpen(false);
+    // Match against SKU or product name
+    const matched = inventory.find(
+      item => item.sku?.toLowerCase() === code.toLowerCase() ||
+              item.product_name?.toLowerCase() === code.toLowerCase()
+    );
+    if (matched) {
+      setStockUpdateItem(matched);
+    } else {
+      // Pre-fill search so staff can see what was scanned
+      setSearch(code);
+    }
+  };
+
+  const handleStockUpdate = (itemId, newQuantity) => {
+    updateMutation.mutate({ id: itemId, data: { quantity: newQuantity } });
+  };
+
   const filtered = inventory
     .filter(item => locFilter === "all" || item.location_type === locFilter)
     .filter(item =>
