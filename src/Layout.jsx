@@ -30,6 +30,7 @@ const navItems = [
   { name: "Vehicles", icon: Truck, page: "Vehicles", sensitive: false },
   { name: "Suppliers", icon: Building2, page: "Suppliers", sensitive: true },
   { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance", sensitive: true },
+  { name: "Automated Reports", icon: BarChart2, page: "AutomatedReporting", sensitive: true },
   { name: "Analytics", icon: BarChart2, page: "Analytics", sensitive: true },
 ];
 
