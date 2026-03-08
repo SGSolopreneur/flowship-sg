@@ -141,106 +141,144 @@ export default function Transfers() {
     return null;
   };
 
+  const pendingCount = stockRequests.filter(r => r.status === "pending_approval").length;
+
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
-      <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
-        <div className="flex gap-3 items-center flex-1">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input placeholder="Search transfers..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+      <Tabs defaultValue="transfers">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="transfers" className="gap-1.5"><Truck className="w-3.5 h-3.5" /> Transfer Orders</TabsTrigger>
+            <TabsTrigger value="requests" className="gap-1.5 relative">
+              <ClipboardList className="w-3.5 h-3.5" /> Stock Requests
+              {pendingCount > 0 && (
+                <Badge className="ml-1 h-4 min-w-4 px-1 text-[10px] bg-amber-500 text-white">{pendingCount}</Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
+              <ClipboardList className="w-4 h-4 mr-1.5" /> Request Stock
+            </Button>
+            <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
+              <Plus className="w-4 h-4 mr-1.5" /> New Transfer
+            </Button>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="confirmed">Confirmed</SelectItem>
-              <SelectItem value="picking">Picking</SelectItem>
-              <SelectItem value="dispatched">Dispatched</SelectItem>
-              <SelectItem value="in_transit">In Transit</SelectItem>
-              <SelectItem value="delivered">Delivered</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4 mr-1.5" /> New Transfer
-        </Button>
-      </div>
 
-      <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
-        {filtered.length === 0 ? (
-          <EmptyState
-            icon={Truck}
-            title="No transfer orders"
-            description="Create your first transfer to move stock from warehouse to stores"
-            actionLabel="New Transfer"
-            onAction={() => setDialogOpen(true)}
-          />
-        ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/80">
-                  <TableHead className="font-semibold text-xs">Order #</TableHead>
-                  <TableHead className="font-semibold text-xs">Destination</TableHead>
-                  <TableHead className="font-semibold text-xs">Items</TableHead>
-                  <TableHead className="font-semibold text-xs">Status</TableHead>
-                  <TableHead className="font-semibold text-xs">Priority</TableHead>
-                  <TableHead className="font-semibold text-xs">Delivery Date</TableHead>
-                  <TableHead className="font-semibold text-xs">Vehicle</TableHead>
-                  <TableHead className="font-semibold text-xs w-16"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(order => (
-                  <TableRow key={order.id} className="hover:bg-slate-50/50">
-                    <TableCell className="font-semibold text-sm font-mono">{order.order_number}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span className="text-slate-400">WH</span>
-                        <ArrowRight className="w-3 h-3 text-slate-300" />
-                        <span className="font-medium text-slate-700">{order.store_name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-slate-600">{order.total_items_count || order.items?.length || 0}</TableCell>
-                    <TableCell><StatusBadge status={order.status} /></TableCell>
-                    <TableCell><StatusBadge status={order.priority} /></TableCell>
-                    <TableCell className="text-xs text-slate-500">
-                      {order.requested_delivery_date ? format(new Date(order.requested_delivery_date), "dd MMM yyyy") : "—"}
-                    </TableCell>
-                    <TableCell className="text-xs text-slate-500">{order.vehicle_number || "—"}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7">
-                            <MoreHorizontal className="w-4 h-4 text-slate-500" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
-                            <DropdownMenuItem onClick={() => advanceStatus(order)}>
-                              Move to {getNextStatusLabel(order.status)}
-                            </DropdownMenuItem>
-                          )}
-                          {order.status !== "delivered" && order.status !== "cancelled" && (
-                            <DropdownMenuItem onClick={() => cancelOrder(order)} className="text-red-600">
-                              Cancel Order
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem onClick={() => deleteMutation.mutate(order.id)} className="text-red-600">
-                            <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        <TabsContent value="transfers" className="space-y-4 mt-0">
+          <div className="flex gap-3 items-center">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input placeholder="Search transfers..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="picking">Picking</SelectItem>
+                <SelectItem value="dispatched">Dispatched</SelectItem>
+                <SelectItem value="in_transit">In Transit</SelectItem>
+                <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        )}
-      </div>
+
+          <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
+            {filtered.length === 0 ? (
+              <EmptyState
+                icon={Truck}
+                title="No transfer orders"
+                description="Create your first transfer to move stock from warehouse to stores"
+                actionLabel="New Transfer"
+                onAction={() => setDialogOpen(true)}
+              />
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50/80">
+                      <TableHead className="font-semibold text-xs">Order #</TableHead>
+                      <TableHead className="font-semibold text-xs">Destination</TableHead>
+                      <TableHead className="font-semibold text-xs">Items</TableHead>
+                      <TableHead className="font-semibold text-xs">Status</TableHead>
+                      <TableHead className="font-semibold text-xs">Priority</TableHead>
+                      <TableHead className="font-semibold text-xs">Delivery Date</TableHead>
+                      <TableHead className="font-semibold text-xs">Vehicle</TableHead>
+                      <TableHead className="font-semibold text-xs w-16"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.map(order => (
+                      <TableRow key={order.id} className="hover:bg-slate-50/50">
+                        <TableCell className="font-semibold text-sm font-mono">{order.order_number}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1.5 text-xs">
+                            <span className="text-slate-400">WH</span>
+                            <ArrowRight className="w-3 h-3 text-slate-300" />
+                            <span className="font-medium text-slate-700">{order.store_name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm text-slate-600">{order.total_items_count || order.items?.length || 0}</TableCell>
+                        <TableCell><StatusBadge status={order.status} /></TableCell>
+                        <TableCell><StatusBadge status={order.priority} /></TableCell>
+                        <TableCell className="text-xs text-slate-500">
+                          {order.requested_delivery_date ? format(new Date(order.requested_delivery_date), "dd MMM yyyy") : "—"}
+                        </TableCell>
+                        <TableCell className="text-xs text-slate-500">{order.vehicle_number || "—"}</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreHorizontal className="w-4 h-4 text-slate-500" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
+                                <DropdownMenuItem onClick={() => advanceStatus(order)}>
+                                  Move to {getNextStatusLabel(order.status)}
+                                </DropdownMenuItem>
+                              )}
+                              {order.status !== "delivered" && order.status !== "cancelled" && (
+                                <DropdownMenuItem onClick={() => cancelOrder(order)} className="text-red-600">
+                                  Cancel Order
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem onClick={() => deleteMutation.mutate(order.id)} className="text-red-600">
+                                <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="requests" className="mt-0">
+          <div className="bg-white rounded-xl border border-slate-200/80 p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-800">Stock Requests</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Stores request replenishment · Managers approve or reject</p>
+              </div>
+            </div>
+            <ApprovalPanel
+              requests={stockRequests}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              saving={updateRequestMutation.isPending}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
 
       <TransferFormDialog
         open={dialogOpen}
@@ -249,6 +287,15 @@ export default function Transfers() {
         products={products}
         onSave={(data) => createMutation.mutate(data)}
         saving={createMutation.isPending}
+      />
+
+      <StockRequestFormDialog
+        open={requestDialogOpen}
+        onOpenChange={setRequestDialogOpen}
+        stores={stores}
+        products={products}
+        onSave={(data) => createRequestMutation.mutate(data)}
+        saving={createRequestMutation.isPending}
       />
     </div>
   );
