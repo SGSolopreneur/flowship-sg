@@ -104,11 +104,31 @@ export default function Layout({ children, currentPageName }) {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-2">
           <div className="bg-white/5 rounded-lg p-3">
             <p className="text-[11px] text-slate-500 uppercase tracking-wider">Region</p>
             <p className="text-sm text-slate-300 font-medium mt-0.5">Singapore 🇸🇬</p>
           </div>
+          {user && (
+            <div className={cn("rounded-lg p-3 flex items-center gap-2.5", roleConfig[role]?.bg || "bg-white/5")}>
+              <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <User className="w-3.5 h-3.5 text-slate-300" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-200 truncate">{user.full_name || user.email}</p>
+                <p className={cn("text-[10px] font-semibold uppercase tracking-wider", roleConfig[role]?.color || "text-slate-400")}>
+                  {roleConfig[role]?.label || role}
+                </p>
+              </div>
+              <button
+                onClick={() => base44.auth.logout()}
+                className="text-slate-500 hover:text-slate-300 transition-colors shrink-0"
+                title="Sign out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 
