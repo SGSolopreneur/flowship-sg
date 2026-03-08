@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 
-export default function TransferFormDialog({ open, onOpenChange, stores, products, onSave, saving }) {
+export default function TransferFormDialog({ open, onOpenChange, stores, products, vehicles, onSave, saving }) {
   const [form, setForm] = useState({
     order_number: "",
     store_id: "",
@@ -16,8 +16,11 @@ export default function TransferFormDialog({ open, onOpenChange, stores, product
     priority: "normal",
     items: [{ product_id: "", product_name: "", sku: "", quantity_requested: "", unit: "" }],
     requested_delivery_date: "",
-    vehicle_number: "",
+    vehicle_id: "",
+    vehicle_plate_number: "",
     driver_name: "",
+    total_weight_kg: 0,
+    total_volume_m3: 0,
     notes: "",
   });
 
@@ -31,12 +34,20 @@ export default function TransferFormDialog({ open, onOpenChange, stores, product
         store_name: "",
         items: [{ product_id: "", product_name: "", sku: "", quantity_requested: "", unit: "" }],
         requested_delivery_date: "",
-        vehicle_number: "",
+        vehicle_id: "",
+        vehicle_plate_number: "",
         driver_name: "",
+        total_weight_kg: 0,
+        total_volume_m3: 0,
         notes: "",
       }));
     }
   }, [open]);
+
+  const handleVehicleChange = (vehicleId) => {
+    const vehicle = vehicles.find(v => v.id === vehicleId);
+    setForm({ ...form, vehicle_id: vehicleId, vehicle_plate_number: vehicle?.plate_number || "" });
+  };
 
   const handleStoreChange = (storeId) => {
     const store = stores.find(s => s.id === storeId);
@@ -160,8 +171,15 @@ export default function TransferFormDialog({ open, onOpenChange, stores, product
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Vehicle Number</Label>
-              <Input value={form.vehicle_number} onChange={e => setForm({ ...form, vehicle_number: e.target.value })} placeholder="e.g. SGX1234A" />
+              <Label>Vehicle *</Label>
+              <Select value={form.vehicle_id} onValueChange={handleVehicleChange}>
+                <SelectTrigger><SelectValue placeholder="Select vehicle" /></SelectTrigger>
+                <SelectContent>
+                  {vehicles.filter(v => v.status === "active").map(v => (
+                    <SelectItem key={v.id} value={v.id}>{v.plate_number} • {v.vehicle_type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label>Driver Name</Label>
