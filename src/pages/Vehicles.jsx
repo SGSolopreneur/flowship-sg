@@ -5,13 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Plus, Search, Truck, MoreHorizontal, Trash2, Wrench, Phone, Mail } from "lucide-react";
+import { Plus, Search, Truck, MoreHorizontal, Trash2, Wrench, Phone, Mail, ChevronDown, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import { useRole } from "../components/shared/useRole";
 import VehicleFormDialog from "../components/vehicles/VehicleFormDialog";
+import MaintenanceFormDialog from "../components/vehicles/MaintenanceFormDialog";
+import MaintenanceHistory from "../components/vehicles/MaintenanceHistory";
 import { cn } from "@/lib/utils";
+import { format, isPast } from "date-fns";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const statusColors = {
   active: "bg-emerald-100 text-emerald-700",
@@ -23,12 +27,19 @@ export default function Vehicles() {
   const [search, setSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [maintenanceOpen, setMaintenanceOpen] = useState(false);
+  const [expandedVehicle, setExpandedVehicle] = useState(null);
   const queryClient = useQueryClient();
-  const { canWrite } = useRole();
+  const { canWrite, user: currentUser } = useRole();
 
   const { data: vehicles = [] } = useQuery({
     queryKey: ["vehicles"],
     queryFn: () => base44.entities.Vehicle.list("-created_date"),
+  });
+
+  const { data: maintenanceRecords = [] } = useQuery({
+    queryKey: ["maintenanceRecords"],
+    queryFn: () => base44.entities.MaintenanceRecord.list("-service_date"),
   });
 
   const createMutation = useMutation({
@@ -53,6 +64,18 @@ export default function Vehicles() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vehicles"] }),
   });
 
+  const createMaintenanceMutation = useMutation({
+    mutationFn: (data) => base44.entities.MaintenanceRecord.create({
+      ...data,
+      logged_by: currentUser?.email,
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["maintenanceRecords"] });
+      setMaintenanceOpen(false);
+      setSelectedVehicle(null);
+    },
+  });
+
   const handleSave = (formData) => {
     if (selectedVehicle) {
       updateMutation.mutate({ id: selectedVehicle.id, data: formData });
@@ -69,6 +92,20 @@ export default function Vehicles() {
   const handleOpenForm = () => {
     setSelectedVehicle(null);
     setFormOpen(true);
+  };
+
+  const handleLogMaintenance = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setMaintenanceOpen(true);
+  };
+
+  const getVehicleMaintenanceRecords = (vehicleId) => {
+    return maintenanceRecords.filter(m => m.vehicle_id === vehicleId);
+  };
+
+  const hasOverdueMaintenance = (vehicleId) => {
+    const records = getVehicleMaintenanceRecords(vehicleId);
+    return records.some(r => r.next_service_due && isPast(new Date(r.next_service_due)));
   };
 
   const filtered = vehicles.filter(v =>
@@ -113,88 +150,102 @@ export default function Vehicles() {
             onAction={handleOpenForm}
           />
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/80">
-                  <TableHead className="font-semibold text-xs">Plate</TableHead>
-                  <TableHead className="font-semibold text-xs">Type</TableHead>
-                  <TableHead className="font-semibold text-xs">Capacity</TableHead>
-                  <TableHead className="font-semibold text-xs">Driver</TableHead>
-                  <TableHead className="font-semibold text-xs">Contact</TableHead>
-                  <TableHead className="font-semibold text-xs">Status</TableHead>
-                  <TableHead className="font-semibold text-xs w-16"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((vehicle) => (
-                  <TableRow key={vehicle.id} className="hover:bg-slate-50/50">
-                    <TableCell className="font-semibold text-sm font-mono">{vehicle.plate_number}</TableCell>
-                    <TableCell className="text-sm text-slate-600 capitalize">{vehicle.vehicle_type}</TableCell>
-                    <TableCell className="text-xs text-slate-500">
-                      <span className="block">{vehicle.weight_capacity_kg} kg</span>
-                      <span className="text-[10px] text-slate-400">{vehicle.volume_capacity_m3} m³</span>
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {vehicle.driver_name ? (
-                        <div>
-                          <p className="font-medium text-slate-800">{vehicle.driver_name}</p>
-                          <p className="text-xs text-slate-500">{vehicle.driver_email || "—"}</p>
+          <div className="space-y-2">
+            {filtered.map((vehicle) => {
+              const records = getVehicleMaintenanceRecords(vehicle.id);
+              const isOverdue = hasOverdueMaintenance(vehicle.id);
+              const isExpanded = expandedVehicle === vehicle.id;
+
+              return (
+                <Collapsible key={vehicle.id} open={isExpanded} onOpenChange={(open) => setExpandedVehicle(open ? vehicle.id : null)}>
+                  <div className="border border-slate-200/80 rounded-lg overflow-hidden">
+                    <CollapsibleTrigger asChild>
+                      <div className="w-full px-4 py-3 bg-white hover:bg-slate-50 cursor-pointer flex items-center justify-between">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform flex-shrink-0", isExpanded && "rotate-180")} />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-sm font-mono text-slate-800">{vehicle.plate_number}</span>
+                              {isOverdue && (
+                                <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" title="Overdue maintenance" />
+                              )}
+                            </div>
+                            <div className="text-xs text-slate-600 mt-1">
+                              {vehicle.driver_name && <span>{vehicle.driver_name} • </span>}
+                              <span className="capitalize">{vehicle.vehicle_type}</span>
+                              <span className="text-slate-500"> • {vehicle.weight_capacity_kg} kg / {vehicle.volume_capacity_m3} m³</span>
+                            </div>
+                          </div>
                         </div>
-                      ) : (
-                        <span className="text-slate-400 text-xs">Not assigned</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-xs text-slate-600">
-                      {vehicle.driver_phone && (
-                        <a href={`tel:${vehicle.driver_phone}`} className="flex items-center gap-1 text-blue-600 hover:underline">
-                          <Phone className="w-3 h-3" /> {vehicle.driver_phone}
-                        </a>
-                      )}
-                      {!vehicle.driver_phone && "—"}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={cn("text-xs", statusColors[vehicle.status])} variant="secondary">
-                        {vehicle.status === "active" && "✓"}
-                        {vehicle.status === "maintenance" && <Wrench className="w-3 h-3 inline mr-1" />}
-                        {vehicle.status === "unavailable" && "✕"}
-                        {vehicle.status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {canWrite && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-7 w-7">
-                              <MoreHorizontal className="w-4 h-4 text-slate-500" />
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                          <Badge className={cn("text-xs", statusColors[vehicle.status])} variant="secondary">
+                            {vehicle.status === "active" && "✓"}
+                            {vehicle.status === "maintenance" && <Wrench className="w-3 h-3 inline mr-1" />}
+                            {vehicle.status === "unavailable" && "✕"}
+                            {vehicle.status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                          </Badge>
+                          {canWrite && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="icon" className="h-7 w-7">
+                                  <MoreHorizontal className="w-4 h-4 text-slate-500" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEdit(vehicle); }}>
+                                  Edit Vehicle
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleLogMaintenance(vehicle); }}>
+                                  <Wrench className="w-3.5 h-3.5 mr-1.5" /> Log Maintenance
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(vehicle.id); }} className="text-red-600">
+                                  <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                        </div>
+                      </div>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent className="border-t border-slate-200/80 bg-slate-50/50 p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-semibold text-slate-800">Maintenance History</h4>
+                          {canWrite && (
+                            <Button size="sm" variant="outline" onClick={() => handleLogMaintenance(vehicle)} className="h-7 text-xs">
+                              <Plus className="w-3 h-3 mr-1" /> Log Service
                             </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(vehicle)}>
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => deleteMutation.mutate(vehicle.id)} className="text-red-600">
-                              <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                          )}
+                        </div>
+                        <div className="bg-white rounded-lg border border-slate-200/80 overflow-hidden">
+                          <MaintenanceHistory records={records} />
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </div>
+                </Collapsible>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Form Dialog */}
+      {/* Dialogs */}
       <VehicleFormDialog
         open={formOpen}
         onOpenChange={setFormOpen}
         vehicle={selectedVehicle}
         onSave={handleSave}
         saving={createMutation.isPending || updateMutation.isPending}
+      />
+
+      <MaintenanceFormDialog
+        open={maintenanceOpen}
+        onOpenChange={setMaintenanceOpen}
+        vehicle={selectedVehicle}
+        onSave={(data) => createMaintenanceMutation.mutate(data)}
+        saving={createMaintenanceMutation.isPending}
       />
     </div>
   );
