@@ -177,6 +177,13 @@ export default function Transfers() {
             </TabsTrigger>
           </TabsList>
           <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              className="border-slate-200 text-slate-600 hover:bg-slate-50"
+              onClick={() => generateTransferManifestPDF({ transfers: filtered, filter: statusFilter })}
+            >
+              <FileDown className="w-4 h-4 mr-1.5" /><span className="hidden sm:inline">Export PDF</span>
+            </Button>
             <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50">
               <ScanLine className="w-4 h-4 mr-1.5" /><span className="hidden sm:inline">Scan</span>
             </Button>
