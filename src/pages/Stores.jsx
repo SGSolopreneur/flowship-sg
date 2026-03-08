@@ -69,8 +69,8 @@ export default function Stores() {
             icon={StoreIcon}
             title="No stores yet"
             description="Add your supermarket locations to manage distribution"
-            actionLabel="Add Store"
-            onAction={() => { setEditStore(null); setDialogOpen(true); }}
+            actionLabel={canWrite ? "Add Store" : undefined}
+            onAction={canWrite ? () => { setEditStore(null); setDialogOpen(true); } : undefined}
           />
         </div>
       ) : (
