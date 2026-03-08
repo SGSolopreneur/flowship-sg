@@ -71,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 px-3 space-y-1">
+        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
           {visibleNavItems.map((item) => {
             const isActive = currentPageName === item.page;
             return (
@@ -80,7 +80,7 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl(item.page)}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
                   isActive
                     ? "bg-emerald-500/15 text-emerald-400"
                     : "text-slate-400 hover:text-white hover:bg-white/5"
