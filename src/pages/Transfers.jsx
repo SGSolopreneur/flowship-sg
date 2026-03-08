@@ -20,6 +20,7 @@ import ApprovalPanel from "../components/transfers/ApprovalPanel";
 import ShipmentVerifier from "../components/transfers/ShipmentVerifier";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import PickingList from "../components/transfers/PickingList";
+import VehicleCapacityCalculator from "../components/transfers/VehicleCapacityCalculator";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
 
@@ -55,6 +56,11 @@ export default function Transfers() {
   const { data: inventory = [] } = useQuery({
     queryKey: ["inventory"],
     queryFn: () => base44.entities.InventoryItem.list(),
+  });
+
+  const { data: vehicles = [] } = useQuery({
+    queryKey: ["vehicles"],
+    queryFn: () => base44.entities.Vehicle.list(),
   });
 
   const createMutation = useMutation({
@@ -363,6 +369,44 @@ export default function Transfers() {
         transfer={pickingOrder}
         inventory={inventory}
       />
+
+      {/* Capacity Warning Dialog */}
+      {capacityWarning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg max-w-sm">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-red-600 mb-4">⚠️ Capacity Exceeded</h3>
+              <VehicleCapacityCalculator
+                items={capacityWarning.weight ? [{ quantity_requested: 1 }] : []}
+                products={[]}
+                vehicle={capacityWarning.vehicle}
+              />
+              <div className="mt-4 space-y-2">
+                <p className="text-sm text-slate-600">
+                  <strong>Total Weight:</strong> {capacityWarning.totalWeight.toFixed(1)} kg (Limit: {capacityWarning.vehicle.weight_capacity_kg} kg)
+                </p>
+                <p className="text-sm text-slate-600">
+                  <strong>Total Volume:</strong> {capacityWarning.totalVolume.toFixed(2)} m³ (Limit: {capacityWarning.vehicle.volume_capacity_m3} m³)
+                </p>
+              </div>
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={() => setCapacityWarning(null)}
+                  className="flex-1 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200"
+                >
+                  Back to Edit
+                </button>
+                <button
+                  onClick={() => { setCapacityWarning(null); setFormOpen(false); }}
+                  className="flex-1 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200"
+                >
+                  Cancel Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
