@@ -56,9 +56,11 @@ export default function Stores() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input placeholder="Search stores..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Button onClick={() => { setEditStore(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4 mr-1.5" /> Add Store
-        </Button>
+        {canWrite && (
+          <Button onClick={() => { setEditStore(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Store
+          </Button>
+        )}
       </div>
 
       {filtered.length === 0 ? (
