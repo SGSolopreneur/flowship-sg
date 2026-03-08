@@ -200,6 +200,11 @@ export default function Inventory() {
             </Button>
           )}
           {canWrite && (
+            <Button variant="outline" onClick={() => setCsvImportOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50">
+              <Upload className="w-4 h-4 mr-1.5" /> Import CSV
+            </Button>
+          )}
+          {canWrite && (
             <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
               <Plus className="w-4 h-4 mr-1.5" /> Add Stock
             </Button>
