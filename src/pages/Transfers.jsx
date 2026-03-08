@@ -52,6 +52,10 @@ export default function Transfers() {
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.list(),
   });
+  const { data: inventory = [] } = useQuery({
+    queryKey: ["inventory"],
+    queryFn: () => base44.entities.InventoryItem.list(),
+  });
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.TransferOrder.create(data),
