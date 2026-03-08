@@ -59,7 +59,16 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
       const daysLeft = calcDaysUntilStockout(item.quantity || 0, dailyUsage);
       if (daysLeft > DAYS_HORIZON) return;
       const product = products.find((p) => p.id === item.product_id);
-      const suggestedQty = Math.ceil(dailyUsage * (DAYS_HORIZON + 3) - (item.quantity || 0));
+      // Use actual supplier lead time if available, else fallback to 3 days
+      const supplier = suppliers.find(s => s.name === product?.supplier && s.status === "active");
+      const leadTimeDays = supplier?.lead_time_days ?? 3;
+      const minOrderQty = supplier?.min_order_quantity ?? 1;
+      const suggestedQtyRaw = Math.ceil(dailyUsage * (DAYS_HORIZON + leadTimeDays) - (item.quantity || 0));
+      // Round up to supplier's minimum order quantity
+      const suggestedQty = Math.max(
+        Math.ceil(suggestedQtyRaw / minOrderQty) * minOrderQty,
+        minOrderQty
+      );
       results.push({
         id: item.id,
         product_id: item.product_id,
