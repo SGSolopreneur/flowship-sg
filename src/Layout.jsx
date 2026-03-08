@@ -11,7 +11,8 @@ import {
   X,
   ChevronRight,
   Warehouse,
-  BarChart2
+  BarChart2,
+  Building2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const navItems = [
   { name: "Inventory", icon: Package, page: "Inventory" },
   { name: "Products", icon: ShoppingCart, page: "Products" },
   { name: "Stores", icon: Store, page: "Stores" },
+  { name: "Suppliers", icon: Building2, page: "Suppliers" },
   { name: "Transfers", icon: Truck, page: "Transfers" },
   { name: "Analytics", icon: BarChart2, page: "Analytics" },
 ];
