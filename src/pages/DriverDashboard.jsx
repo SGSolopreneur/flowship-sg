@@ -49,11 +49,32 @@ export default function DriverDashboard() {
   });
 
   const confirmDeliveryMutation = useMutation({
-    mutationFn: ({ transferId }) =>
-      base44.entities.TransferOrder.update(transferId, {
+    mutationFn: async ({ transferId, customerName, signature, photoFiles }) => {
+      // Upload signature
+      let signatureUrl = null;
+      if (signature) {
+        const sigBlob = await fetch(signature).then((r) => r.blob());
+        const sigFile = new File([sigBlob], "signature.png", { type: "image/png" });
+        const sigUpload = await base44.integrations.Core.UploadFile({ file: sigFile });
+        signatureUrl = sigUpload.file_url;
+      }
+
+      // Upload photos
+      const photoUrls = [];
+      for (const photo of photoFiles) {
+        const photoUpload = await base44.integrations.Core.UploadFile({ file: photo });
+        photoUrls.push(photoUpload.file_url);
+      }
+
+      // Update transfer order
+      return base44.entities.TransferOrder.update(transferId, {
         status: "delivered",
         actual_delivery_date: format(new Date(), "yyyy-MM-dd"),
-      }),
+        recipient_name: customerName,
+        signature_url: signatureUrl,
+        delivery_photos: photoUrls,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transfers"] });
       setConfirmingTask(null);
@@ -82,9 +103,14 @@ export default function DriverDashboard() {
     });
   };
 
-  const handleConfirmDelivery = (transferId) => {
+  const handleConfirmDelivery = (transferId, confirmData) => {
     setConfirmingTask(transferId);
-    confirmDeliveryMutation.mutate({ transferId });
+    confirmDeliveryMutation.mutate({
+      transferId,
+      customerName: confirmData.customerName,
+      signature: confirmData.signature,
+      photoFiles: confirmData.photos,
+    });
   };
 
   if (!driverName) {
