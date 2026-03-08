@@ -24,6 +24,8 @@ export default function Inventory() {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [stockUpdateItem, setStockUpdateItem] = useState(null);
   const [historyItem, setHistoryItem] = useState(null);
+  const [csvImportOpen, setCsvImportOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
   const queryClient = useQueryClient();
 
   const { user: currentUser, canWrite } = useRole();
