@@ -42,7 +42,7 @@ export default function Dashboard() {
   return (
     <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
         <StatCard title="Products" value={products.length} icon={ShoppingCart} color="blue" subtitle="In catalog" />
         <StatCard title="Warehouse Stock" value={totalWarehouseQty.toLocaleString()} icon={Package} color="emerald" subtitle="Total units" />
         <StatCard title="Active Stores" value={activeStores} icon={Store} color="violet" subtitle={`of ${stores.length} total`} />
