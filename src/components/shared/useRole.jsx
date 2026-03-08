@@ -14,7 +14,7 @@ export function useRole() {
     role,
     isAdmin: role === "admin",
     isManager: role === "manager" || role === "admin",
-    canWrite: role === "admin" || role === "manager",
+    canWrite: true,
     canAccessSensitive: role === "admin" || role === "manager",
   };
 }
