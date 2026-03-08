@@ -255,24 +255,28 @@ export default function Inventory() {
         />
       )}
 
-      <StockUpdateDialog
-        open={!!stockUpdateItem}
-        onOpenChange={(open) => { if (!open) setStockUpdateItem(null); }}
-        inventoryItem={stockUpdateItem}
-        product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
-        onSave={handleStockUpdate}
-        saving={updateMutation.isPending}
-      />
+      {canWrite && (
+        <StockUpdateDialog
+          open={!!stockUpdateItem}
+          onOpenChange={(open) => { if (!open) setStockUpdateItem(null); }}
+          inventoryItem={stockUpdateItem}
+          product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
+          onSave={handleStockUpdate}
+          saving={updateMutation.isPending}
+        />
+      )}
 
-      <InventoryFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        item={editItem}
-        products={products}
-        stores={stores}
-        onSave={handleSave}
-        saving={createMutation.isPending || updateMutation.isPending}
-      />
+      {canWrite && (
+        <InventoryFormDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          item={editItem}
+          products={products}
+          stores={stores}
+          onSave={handleSave}
+          saving={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
     </div>
   );
 }
