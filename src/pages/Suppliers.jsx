@@ -147,9 +147,18 @@ export default function Suppliers() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input placeholder="Search suppliers..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Button onClick={() => { setEditSupplier(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4 mr-1.5" /> Add Supplier
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="border-slate-200 text-slate-600 hover:bg-slate-50"
+            onClick={() => generateSupplierPerformancePDF({ suppliers: filtered })}
+          >
+            <FileDown className="w-4 h-4 mr-1.5" /><span className="hidden sm:inline">Export PDF</span>
+          </Button>
+          <Button onClick={() => { setEditSupplier(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Supplier
+          </Button>
+        </div>
       </div>
 
       {/* Table */}
