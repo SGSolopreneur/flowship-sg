@@ -18,6 +18,8 @@ export default function Inventory() {
   const [locFilter, setLocFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [stockUpdateItem, setStockUpdateItem] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: inventory = [] } = useQuery({
