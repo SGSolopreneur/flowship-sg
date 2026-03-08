@@ -1,13 +1,15 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Package, Store, Truck, AlertTriangle, ShoppingCart } from "lucide-react";
+import { Package, Store, Truck, AlertTriangle, ShoppingCart, FileDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import StatCard from "../components/dashboard/StatCard";
 import LowStockAlert from "../components/dashboard/LowStockAlert";
 import RecentTransfers from "../components/dashboard/RecentTransfers";
 import CategoryBreakdown from "../components/dashboard/CategoryBreakdown";
 import ReorderSuggestions from "../components/dashboard/ReorderSuggestions";
 import ExpiryAlert from "../components/dashboard/ExpiryAlert";
+import { generateStockSummaryPDF } from "../components/shared/PdfReportGenerator";
 
 export default function Dashboard() {
   const { data: products = [] } = useQuery({
