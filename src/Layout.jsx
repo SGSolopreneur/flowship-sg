@@ -95,10 +95,14 @@ export default function Layout({ children, currentPageName }) {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-2">
           <div className="bg-white/5 rounded-lg p-3">
             <p className="text-[11px] text-slate-500 uppercase tracking-wider">Region</p>
             <p className="text-sm text-slate-300 font-medium mt-0.5">Singapore 🇸🇬</p>
+          </div>
+          <div className="flex items-center gap-2 px-1">
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-[11px] text-slate-500 capitalize">{role} access</span>
           </div>
         </div>
       </aside>
