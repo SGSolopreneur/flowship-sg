@@ -15,6 +15,7 @@ import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
 import StockMovementHistory from "../components/inventory/StockMovementHistory";
 import CsvImportDialog from "../components/inventory/CsvImportDialog";
+import WarehouseFloorPlan from "../components/inventory/WarehouseFloorPlan";
 
 export default function Inventory() {
   const [search, setSearch] = useState("");
