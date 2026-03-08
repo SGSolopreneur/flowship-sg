@@ -29,6 +29,7 @@ export default function Transfers() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [verifierOrder, setVerifierOrder] = useState(null);
+  const [pickingOrder, setPickingOrder] = useState(null);
   const [scannerOpen, setScannerOpen] = useState(false);
   const queryClient = useQueryClient();
 
