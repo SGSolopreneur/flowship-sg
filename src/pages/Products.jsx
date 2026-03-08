@@ -103,16 +103,18 @@ export default function Products() {
                     <TableCell><StatusBadge status={product.storage_type} /></TableCell>
                     <TableCell className="text-right text-sm">{product.unit_cost ? `$${product.unit_cost.toFixed(2)}` : "—"}</TableCell>
                     <TableCell className="text-sm">{product.is_halal_certified ? "✓" : "—"}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditProduct(product); setDialogOpen(true); }}>
-                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(product.id)}>
-                          <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                        </Button>
-                      </div>
-                    </TableCell>
+                    {canWrite && (
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditProduct(product); setDialogOpen(true); }}>
+                            <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(product.id)}>
+                            <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
