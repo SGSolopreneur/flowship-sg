@@ -48,6 +48,24 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
+      {/* Header with report download */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-bold text-slate-800">Dashboard</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Live overview · Singapore SGT</p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5"
+          onClick={() => generateStockSummaryPDF({ inventory, products, stores })}
+        >
+          <FileDown className="w-4 h-4" />
+          <span className="hidden sm:inline">Stock Summary PDF</span>
+          <span className="sm:hidden">PDF</span>
+        </Button>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
         <StatCard title="Products" value={products.length} icon={ShoppingCart} color="blue" subtitle="In catalog" />
