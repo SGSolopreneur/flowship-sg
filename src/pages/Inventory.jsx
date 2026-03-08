@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, Package } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Package, ScanLine } from "lucide-react";
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import InventoryFormDialog from "../components/inventory/InventoryFormDialog";
+import BarcodeScanner from "../components/inventory/BarcodeScanner";
+import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
 
 export default function Inventory() {
   const [search, setSearch] = useState("");
