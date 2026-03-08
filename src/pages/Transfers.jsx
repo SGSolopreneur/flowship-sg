@@ -30,7 +30,7 @@ export default function Transfers() {
   const [scannerOpen, setScannerOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: currentUser } = useQuery({ queryKey: ["me"], queryFn: () => base44.auth.me() });
+  const { user: currentUser, canWrite, isManager } = useRole();
 
   const { data: stockRequests = [] } = useQuery({
     queryKey: ["stockRequests"],
