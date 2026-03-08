@@ -22,7 +22,15 @@ export default function Transfers() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: currentUser } = useQuery({ queryKey: ["me"], queryFn: () => base44.auth.me() });
+
+  const { data: stockRequests = [] } = useQuery({
+    queryKey: ["stockRequests"],
+    queryFn: () => base44.entities.StockRequest.list("-created_date"),
+  });
 
   const { data: transfers = [] } = useQuery({
     queryKey: ["transfers"],
