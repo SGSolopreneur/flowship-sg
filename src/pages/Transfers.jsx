@@ -27,11 +27,12 @@ const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit",
 export default function Transfers() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [verifierOrder, setVerifierOrder] = useState(null);
   const [pickingOrder, setPickingOrder] = useState(null);
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [capacityWarning, setCapacityWarning] = useState(null);
   const queryClient = useQueryClient();
 
   const { user: currentUser, canWrite, isManager } = useRole();
@@ -63,9 +64,9 @@ export default function Transfers() {
     queryFn: () => base44.entities.Vehicle.list(),
   });
 
-  const createMutation = useMutation({
+  const createTransferMutation = useMutation({
     mutationFn: (data) => base44.entities.TransferOrder.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["transfers"] }); setDialogOpen(false); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["transfers"] }); setFormOpen(false); },
   });
 
   const updateMutation = useMutation({
