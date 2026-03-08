@@ -32,6 +32,11 @@ export default function Dashboard() {
     queryFn: () => base44.entities.TransferOrder.list("-created_date"),
   });
 
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: () => base44.entities.Supplier.list(),
+  });
+
   const warehouseStock = inventory.filter(i => i.location_type === "warehouse");
   const totalWarehouseQty = warehouseStock.reduce((sum, i) => sum + (i.quantity || 0), 0);
   const activeStores = stores.filter(s => s.status === "active").length;
