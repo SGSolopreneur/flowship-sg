@@ -112,6 +112,7 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
         suggestions: chosenSuggestions,
         procurementEmail,
         products,
+        suppliers,
       });
       setSubmitted(res.data?.po_number);
     } finally {
