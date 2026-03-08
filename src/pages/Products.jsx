@@ -22,6 +22,7 @@ export default function Products() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const queryClient = useQueryClient();
+  const { canWrite } = useRole();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
