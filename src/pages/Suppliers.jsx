@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  Plus, Search, Pencil, Trash2, Building2, Star, Clock, ShieldCheck, TrendingUp
+  Plus, Search, Pencil, Trash2, Building2, Star, Clock, ShieldCheck, TrendingUp, FileDown
 } from "lucide-react";
+import { generateSupplierPerformancePDF } from "../components/shared/PdfReportGenerator";
 import EmptyState from "../components/shared/EmptyState";
 import SupplierFormDialog from "../components/suppliers/SupplierFormDialog";
 import { cn } from "@/lib/utils";
