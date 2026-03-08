@@ -229,14 +229,37 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
           </DialogHeader>
 
           {submitted ? (
-            <div className="py-6 text-center space-y-3">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
-              <p className="font-semibold text-slate-800">Purchase Order Created</p>
-              <p className="text-sm text-slate-500">
-                <strong>{submitted}</strong> has been drafted.
-                {procurementEmail && ` A notification was sent to ${procurementEmail}.`}
-              </p>
-              <Button size="sm" variant="outline" onClick={() => setShowPODialog(false)}>Close</Button>
+            <div className="py-5 space-y-4">
+              {submitted.flagged ? (
+                <div className="text-center space-y-2">
+                  <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto" />
+                  <p className="font-semibold text-slate-800">PO Flagged for Manual Review</p>
+                  <p className="text-sm text-slate-500">
+                    <strong>{submitted.po_number}</strong> requires approval before it can be placed.
+                    {procurementEmail && ` An approval request was emailed to ${procurementEmail}.`}
+                  </p>
+                  <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-left">
+                    <p className="text-[11px] font-semibold text-amber-700 mb-1">Flag reason(s):</p>
+                    {submitted.flagged_reason.split(' | ').map((r, i) => (
+                      <p key={i} className="text-[11px] text-amber-700">• {r}</p>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-slate-400">The approver can approve or reject directly via the email link.</p>
+                </div>
+              ) : (
+                <div className="text-center space-y-2">
+                  <ShieldCheck className="w-10 h-10 text-emerald-500 mx-auto" />
+                  <p className="font-semibold text-slate-800">Purchase Order Submitted</p>
+                  <p className="text-sm text-slate-500">
+                    <strong>{submitted.po_number}</strong> passed all checks and has been submitted.
+                    {procurementEmail && ` A notification was sent to ${procurementEmail}.`}
+                  </p>
+                  <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2.5 text-[11px] text-emerald-700">
+                    No flags detected — order is within value threshold and all suppliers are rated above minimum.
+                  </div>
+                </div>
+              )}
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setShowPODialog(false)}>Close</Button>
             </div>
           ) : (
             <>
