@@ -18,6 +18,7 @@ Deno.serve(async (req) => {
     // Build line items enriched with product data
     const items = suggestions.map((s) => {
       const product = (products || []).find((p) => p.id === s.product_id);
+      const supplier = (suppliers || []).find(sup => sup.name === product?.supplier && sup.status === 'active');
       return {
         product_id: s.product_id || '',
         product_name: s.product_name,
@@ -25,14 +26,16 @@ Deno.serve(async (req) => {
         quantity: s.suggestedQty,
         unit: s.unit || 'pcs',
         unit_cost: product?.unit_cost || 0,
-        supplier: product?.supplier || 'TBD',
+        supplier: supplier?.name || product?.supplier || 'TBD',
+        lead_time_days: supplier?.lead_time_days || s.leadTimeDays || 3,
+        min_order_quantity: supplier?.min_order_quantity || 1,
       };
     });
 
     const totalValue = items.reduce((sum, i) => sum + (i.unit_cost * i.quantity), 0);
 
     const itemsSummary = items
-      .map((i) => `• ${i.product_name} (${i.sku}) — ${i.quantity} ${i.unit} @ SGD ${i.unit_cost.toFixed(2)} each (Supplier: ${i.supplier})`)
+      .map((i) => `• ${i.product_name} (${i.sku}) — ${i.quantity} ${i.unit} @ SGD ${i.unit_cost.toFixed(2)} each\n  Supplier: ${i.supplier} | Lead time: ${i.lead_time_days}d | Min order: ${i.min_order_quantity} ${i.unit}`)
       .join('\n');
 
     // Create the draft PO
