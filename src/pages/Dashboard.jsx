@@ -53,17 +53,17 @@ export default function Dashboard() {
   }).length;
 
   return (
-    <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto w-full">
       {/* Header with report download */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-lg font-bold text-slate-800">Dashboard</h1>
           <p className="text-xs text-slate-400 mt-0.5">Live overview · Singapore SGT</p>
         </div>
         <Button
           variant="outline"
           size="sm"
-          className="border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5"
+          className="border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5 w-full sm:w-auto"
           onClick={() => generateStockSummaryPDF({ inventory, products, stores })}
         >
           <FileDown className="w-4 h-4" />

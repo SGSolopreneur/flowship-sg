@@ -179,7 +179,7 @@ export default function Inventory() {
   };
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4 w-full">
       <div className="flex flex-col gap-3">
         <div className="flex gap-2 items-center">
           <div className="relative flex-1">

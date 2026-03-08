@@ -18,7 +18,7 @@ export default function Analytics() {
   const totalRequests = transfers.length;
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-6 w-full">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center">

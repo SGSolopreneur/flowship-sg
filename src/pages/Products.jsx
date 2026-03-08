@@ -58,7 +58,7 @@ export default function Products() {
   );
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4 w-full">
       <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

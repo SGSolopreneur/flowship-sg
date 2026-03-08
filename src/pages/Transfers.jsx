@@ -210,8 +210,7 @@ export default function Transfers() {
 
   const pendingCount = stockRequests.filter(r => r.status === "pending_approval").length;
 
-  return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4 w-full">
       <Tabs defaultValue="transfers">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <TabsList className="bg-slate-100">
