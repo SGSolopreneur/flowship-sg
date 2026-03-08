@@ -29,7 +29,7 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
   const [selectedItems, setSelectedItems] = useState({});
   const [procurementEmail, setProcurementEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(null); // po_number on success
+  const [submitted, setSubmitted] = useState(null); // { po_number, flagged, flagged_reason, status }
 
   const { data: movements = [], isLoading } = useQuery({
     queryKey: ["stockMovements"],
