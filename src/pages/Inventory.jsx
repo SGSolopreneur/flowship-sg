@@ -21,7 +21,13 @@ export default function Inventory() {
   const [editItem, setEditItem] = useState(null);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [stockUpdateItem, setStockUpdateItem] = useState(null);
+  const [historyItem, setHistoryItem] = useState(null);
   const queryClient = useQueryClient();
+
+  const { data: currentUser } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => base44.auth.me(),
+  });
 
   const { data: inventory = [] } = useQuery({
     queryKey: ["inventory"],
