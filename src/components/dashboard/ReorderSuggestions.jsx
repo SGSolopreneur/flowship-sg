@@ -79,7 +79,10 @@ export default function ReorderSuggestions({ inventoryItems, products }) {
         unit: product?.unit || "pcs",
         dailyUsage: parseFloat(dailyUsage.toFixed(2)),
         daysLeft: parseFloat(daysLeft.toFixed(1)),
-        suggestedQty: Math.max(suggestedQty, 1),
+        suggestedQty,
+        leadTimeDays,
+        supplierName: supplier?.name || product?.supplier || null,
+        supplierRating: supplier?.performance_rating || null,
       });
     });
     return results.sort((a, b) => a.daysLeft - b.daysLeft);
