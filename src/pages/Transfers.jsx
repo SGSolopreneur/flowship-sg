@@ -356,6 +356,13 @@ export default function Transfers() {
           onClose={() => setScannerOpen(false)}
         />
       )}
+
+      <PickingList
+        open={!!pickingOrder}
+        onOpenChange={(o) => { if (!o) setPickingOrder(null); }}
+        transfer={pickingOrder}
+        inventory={inventory}
+      />
     </div>
   );
 }
