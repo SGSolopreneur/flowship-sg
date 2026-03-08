@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList } from "lucide-react";
+import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList, ScanLine, PackageCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
