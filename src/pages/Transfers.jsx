@@ -182,9 +182,11 @@ export default function Transfers() {
             <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
               <ClipboardList className="w-4 h-4 mr-1.5" /> Request Stock
             </Button>
-            <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
-              <Plus className="w-4 h-4 mr-1.5" /> New Transfer
-            </Button>
+            {canWrite && (
+              <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
+                <Plus className="w-4 h-4 mr-1.5" /> New Transfer
+              </Button>
+            )}
           </div>
         </div>
 
