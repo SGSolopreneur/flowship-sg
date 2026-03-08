@@ -7,6 +7,7 @@ import { Plus, Search, Pencil, Trash2, Store as StoreIcon, MapPin, Phone } from 
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import StoreFormDialog from "../components/stores/StoreFormDialog";
+import { useRole } from "../components/shared/useRole";
 
 const regionLabels = { north: "North", south: "South", east: "East", west: "West", central: "Central" };
 const typeLabels = { hypermarket: "Hypermarket", supermarket: "Supermarket", minimart: "Minimart", express: "Express" };
