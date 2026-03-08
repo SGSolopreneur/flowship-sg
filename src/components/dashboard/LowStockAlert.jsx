@@ -1,6 +1,8 @@
-import React from "react";
-import { AlertTriangle } from "lucide-react";
+import React, { useState } from "react";
+import { AlertTriangle, Mail, CheckCircle2, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
 
 export default function LowStockAlert({ items, products }) {
   const getProduct = (productId) => products.find(p => p.id === productId);
