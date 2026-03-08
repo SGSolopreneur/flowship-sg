@@ -25,10 +25,7 @@ export default function Inventory() {
   const [historyItem, setHistoryItem] = useState(null);
   const queryClient = useQueryClient();
 
-  const { data: currentUser } = useQuery({
-    queryKey: ["me"],
-    queryFn: () => base44.auth.me(),
-  });
+  const { user: currentUser, canWrite } = useRole();
 
   const { data: inventory = [] } = useQuery({
     queryKey: ["inventory"],
