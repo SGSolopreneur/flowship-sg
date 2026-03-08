@@ -49,24 +49,24 @@
  */
 import Analytics from './pages/Analytics';
 import Dashboard from './pages/Dashboard';
-import Suppliers from './pages/Suppliers';
-import SupplierPerformance from './pages/SupplierPerformance';
-import Transfers from './pages/Transfers';
 import Inventory from './pages/Inventory';
-import Stores from './pages/Stores';
 import Products from './pages/Products';
+import Stores from './pages/Stores';
+import SupplierPerformance from './pages/SupplierPerformance';
+import Suppliers from './pages/Suppliers';
+import Transfers from './pages/Transfers';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Analytics": Analytics,
     "Dashboard": Dashboard,
-    "Suppliers": Suppliers,
-    "SupplierPerformance": SupplierPerformance,
-    "Transfers": Transfers,
     "Inventory": Inventory,
-    "Stores": Stores,
     "Products": Products,
+    "Stores": Stores,
+    "SupplierPerformance": SupplierPerformance,
+    "Suppliers": Suppliers,
+    "Transfers": Transfers,
 }
 
 export const pagesConfig = {

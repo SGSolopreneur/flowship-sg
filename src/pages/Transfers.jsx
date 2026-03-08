@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList, ScanLine, PackageCheck, FileDown } from "lucide-react";
+import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList, ScanLine, PackageCheck, FileDown, ListChecks } from "lucide-react";
 import { generateTransferManifestPDF } from "../components/shared/PdfReportGenerator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
