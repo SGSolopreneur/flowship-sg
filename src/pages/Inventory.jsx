@@ -136,6 +136,47 @@ export default function Inventory() {
 
   const getProduct = (id) => products.find(p => p.id === id);
 
+  const handleCsvImport = async (rows) => {
+    setImporting(true);
+    for (const row of rows) {
+      const data = {
+        product_name: row.product_name,
+        sku: row.sku,
+        location_type: row.location_type,
+        location_name: row.location_name || row.location_type,
+        quantity: Number(row.quantity),
+        storage_zone: row.storage_zone || undefined,
+        batch_number: row.batch_number || undefined,
+        expiry_date: row.expiry_date || undefined,
+      };
+      if (row._existing) {
+        const before = row._existing.quantity || 0;
+        const after = data.quantity;
+        await base44.entities.InventoryItem.update(row._existing.id, data);
+        if (before !== after) {
+          await base44.entities.StockMovement.create({
+            inventory_item_id: row._existing.id,
+            product_name: data.product_name,
+            sku: data.sku,
+            location_name: data.location_name,
+            adjustment_type: after > before ? "in" : "out",
+            quantity_before: before,
+            quantity_change: after - before,
+            quantity_after: after,
+            source: "form_update",
+            performed_by: currentUser?.email || "csv_import",
+            notes: "CSV bulk import",
+          });
+        }
+      } else {
+        await base44.entities.InventoryItem.create(data);
+      }
+    }
+    queryClient.invalidateQueries({ queryKey: ["inventory"] });
+    setImporting(false);
+    setCsvImportOpen(false);
+  };
+
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
       <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
