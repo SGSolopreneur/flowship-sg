@@ -15,6 +15,8 @@ import EmptyState from "../components/shared/EmptyState";
 import TransferFormDialog from "../components/transfers/TransferFormDialog";
 import StockRequestFormDialog from "../components/transfers/StockRequestFormDialog";
 import ApprovalPanel from "../components/transfers/ApprovalPanel";
+import ShipmentVerifier from "../components/transfers/ShipmentVerifier";
+import BarcodeScanner from "../components/inventory/BarcodeScanner";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
 
