@@ -60,6 +60,57 @@ export default function Transfers() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transfers"] }),
   });
 
+  const createRequestMutation = useMutation({
+    mutationFn: (data) => base44.entities.StockRequest.create({ ...data, requested_by: currentUser?.email }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["stockRequests"] }); setRequestDialogOpen(false); },
+  });
+
+  const updateRequestMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.StockRequest.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stockRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["transfers"] });
+    },
+  });
+
+  const handleApprove = async (request, reviewNotes) => {
+    // Create a transfer order from the approved request
+    const orderNumber = `TO-${Date.now().toString().slice(-6)}`;
+    const newTransfer = await base44.entities.TransferOrder.create({
+      order_number: orderNumber,
+      store_id: request.store_id,
+      store_name: request.store_name,
+      status: "confirmed",
+      priority: request.priority,
+      items: request.items,
+      requested_delivery_date: request.requested_delivery_date,
+      notes: `Auto-created from stock request ${request.request_number}`,
+      total_items_count: request.items?.length || 0,
+    });
+    updateRequestMutation.mutate({
+      id: request.id,
+      data: {
+        status: "approved",
+        reviewed_by: currentUser?.email,
+        review_notes: reviewNotes,
+        reviewed_at: new Date().toISOString(),
+        transfer_order_id: newTransfer.id,
+      },
+    });
+  };
+
+  const handleReject = (request, reviewNotes) => {
+    updateRequestMutation.mutate({
+      id: request.id,
+      data: {
+        status: "rejected",
+        reviewed_by: currentUser?.email,
+        review_notes: reviewNotes,
+        reviewed_at: new Date().toISOString(),
+      },
+    });
+  };
+
   const advanceStatus = (order) => {
     const currentIdx = statusFlow.indexOf(order.status);
     if (currentIdx < statusFlow.length - 1) {
