@@ -77,8 +77,8 @@ export default function Products() {
             icon={ShoppingCart}
             title="No products yet"
             description="Add your first product to start managing inventory"
-            actionLabel="Add Product"
-            onAction={() => { setEditProduct(null); setDialogOpen(true); }}
+            actionLabel={canWrite ? "Add Product" : undefined}
+            onAction={canWrite ? () => { setEditProduct(null); setDialogOpen(true); } : undefined}
           />
         ) : (
           <div className="overflow-x-auto">
