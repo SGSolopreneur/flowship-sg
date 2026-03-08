@@ -227,13 +227,13 @@ export default function Inventory() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-slate-50/80">
-                  <TableHead className="font-semibold text-xs">Product</TableHead>
-                  <TableHead className="font-semibold text-xs">SKU</TableHead>
+                  <TableHead className="font-semibold text-xs sticky left-0 bg-slate-50 z-10 min-w-[130px]">Product</TableHead>
+                  <TableHead className="font-semibold text-xs hidden sm:table-cell">SKU</TableHead>
                   <TableHead className="font-semibold text-xs">Location</TableHead>
-                  <TableHead className="font-semibold text-xs">Zone</TableHead>
+                  <TableHead className="font-semibold text-xs hidden md:table-cell">Zone</TableHead>
                   <TableHead className="font-semibold text-xs text-right">Qty</TableHead>
-                  <TableHead className="font-semibold text-xs">Batch</TableHead>
-                  <TableHead className="font-semibold text-xs">Expiry</TableHead>
+                  <TableHead className="font-semibold text-xs hidden lg:table-cell">Batch</TableHead>
+                  <TableHead className="font-semibold text-xs hidden lg:table-cell">Expiry</TableHead>
                   <TableHead className="font-semibold text-xs w-20"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -243,41 +243,41 @@ export default function Inventory() {
                   const isLow = product && item.quantity <= (product.min_stock_level || 10);
                   return (
                     <TableRow key={item.id} className="hover:bg-slate-50/50">
-                      <TableCell className="font-medium text-sm">{item.product_name}</TableCell>
-                      <TableCell className="text-xs font-mono text-slate-500">{item.sku}</TableCell>
+                      <TableCell className="font-medium text-sm sticky left-0 bg-white z-10 min-w-[130px]">{item.product_name}</TableCell>
+                      <TableCell className="text-xs font-mono text-slate-500 hidden sm:table-cell">{item.sku}</TableCell>
                       <TableCell>
                         <div className="text-xs">
                           <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${item.location_type === "warehouse" ? "bg-blue-50 text-blue-700" : "bg-violet-50 text-violet-700"}`}>
                             {item.location_type === "warehouse" ? "WH" : "Store"}
                           </span>
-                          <span className="text-slate-500 ml-1.5">{item.location_name}</span>
+                          <span className="text-slate-500 ml-1.5 hidden sm:inline">{item.location_name}</span>
                         </div>
                       </TableCell>
-                      <TableCell><StatusBadge status={item.storage_zone} /></TableCell>
+                      <TableCell className="hidden md:table-cell"><StatusBadge status={item.storage_zone} /></TableCell>
                       <TableCell className={`text-right text-sm font-semibold ${isLow ? "text-red-500" : "text-slate-800"}`}>
                         {item.quantity?.toLocaleString()} {product?.unit || ""}
                       </TableCell>
-                      <TableCell className="text-xs text-slate-500">{item.batch_number || "—"}</TableCell>
-                      <TableCell className="text-xs text-slate-500">
+                      <TableCell className="text-xs text-slate-500 hidden lg:table-cell">{item.batch_number || "—"}</TableCell>
+                      <TableCell className="text-xs text-slate-500 hidden lg:table-cell">
                         {item.expiry_date ? format(new Date(item.expiry_date), "dd MMM yyyy") : "—"}
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
                           {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
                               <ScanLine className="w-3.5 h-3.5 text-emerald-500" />
                             </Button>
                           )}
-                          <Button variant="ghost" size="icon" className="h-7 w-7" title="View history" onClick={() => setHistoryItem(item)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" title="View history" onClick={() => setHistoryItem(item)}>
                             <History className="w-3.5 h-3.5 text-slate-400" />
                           </Button>
                           {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditItem(item); setDialogOpen(true); }}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditItem(item); setDialogOpen(true); }}>
                               <Pencil className="w-3.5 h-3.5 text-slate-500" />
                             </Button>
                           )}
                           {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(item.id)}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => deleteMutation.mutate(item.id)}>
                               <Trash2 className="w-3.5 h-3.5 text-red-400" />
                             </Button>
                           )}
