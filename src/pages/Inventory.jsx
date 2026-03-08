@@ -169,8 +169,8 @@ export default function Inventory() {
             icon={Package}
             title="No inventory records"
             description="Start adding stock to track your warehouse and store inventory"
-            actionLabel="Add Stock"
-            onAction={() => { setEditItem(null); setDialogOpen(true); }}
+            actionLabel={canWrite ? "Add Stock" : undefined}
+            onAction={canWrite ? () => { setEditItem(null); setDialogOpen(true); } : undefined}
           />
         ) : (
           <div className="overflow-x-auto">
