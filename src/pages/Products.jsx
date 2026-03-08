@@ -4,10 +4,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, ShoppingCart } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, ShoppingCart, QrCode } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import ProductFormDialog from "../components/products/ProductFormDialog";
+import QRCodeGenerator from "../components/products/QRCodeGenerator";
 import { useRole } from "../components/shared/useRole";
 
 const categoryLabels = {
