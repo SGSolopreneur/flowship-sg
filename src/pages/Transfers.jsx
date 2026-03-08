@@ -145,6 +145,20 @@ export default function Transfers() {
     return null;
   };
 
+  const handleBarcodeScan = (code) => {
+    setScannerOpen(false);
+    const normalized = code.trim().toLowerCase();
+    const matched = transfers.find(
+      t => t.order_number?.toLowerCase() === normalized ||
+           t.items?.some(i => i.sku?.toLowerCase() === normalized || i.product_name?.toLowerCase() === normalized)
+    );
+    if (matched) {
+      setVerifierOrder(matched);
+    } else {
+      setSearch(code);
+    }
+  };
+
   const pendingCount = stockRequests.filter(r => r.status === "pending_approval").length;
 
   return (
