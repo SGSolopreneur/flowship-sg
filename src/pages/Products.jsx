@@ -108,6 +108,9 @@ export default function Products() {
                     {canWrite && (
                       <TableCell>
                         <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setQrProduct(product)}>
+                            <QrCode className="w-3.5 h-3.5 text-blue-500" />
+                          </Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditProduct(product); setDialogOpen(true); }}>
                             <Pencil className="w-3.5 h-3.5 text-slate-500" />
                           </Button>
