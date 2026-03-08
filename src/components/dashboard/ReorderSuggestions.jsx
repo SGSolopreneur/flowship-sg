@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import {
-  TrendingDown, Clock, Loader2, ShoppingBag, CheckCircle2, X, Mail, Building2, Star
+  TrendingDown, Clock, Loader2, ShoppingBag, CheckCircle2, X, Mail, Building2, Star, AlertTriangle, ShieldCheck
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
