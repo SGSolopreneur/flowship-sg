@@ -112,14 +112,14 @@ export default function Layout({ children, currentPageName }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center px-4 lg:px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center px-4 lg:px-6 sticky top-0 z-30 shrink-0">
           <button
             className="lg:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h2 className="text-lg font-semibold text-slate-800 ml-2 lg:ml-0">
+          <h2 className="text-sm sm:text-base md:text-lg font-semibold text-slate-800 ml-2 lg:ml-0 truncate">
             {currentPageName}
           </h2>
         </header>
