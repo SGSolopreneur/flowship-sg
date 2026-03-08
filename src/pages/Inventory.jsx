@@ -214,6 +214,8 @@ export default function Inventory() {
         </div>
       </div>
 
+      <WarehouseFloorPlan inventory={inventory} products={products} />
+
       <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
         {filtered.length === 0 ? (
           <EmptyState
