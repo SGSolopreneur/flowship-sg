@@ -56,6 +56,7 @@ import SupplierPerformance from './pages/SupplierPerformance';
 import Suppliers from './pages/Suppliers';
 import Transfers from './pages/Transfers';
 import Vehicles from './pages/Vehicles';
+import DriverDashboard from './pages/DriverDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Suppliers": Suppliers,
     "Transfers": Transfers,
     "Vehicles": Vehicles,
+    "DriverDashboard": DriverDashboard,
 }
 
 export const pagesConfig = {
