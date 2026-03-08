@@ -8,7 +8,6 @@ import { Plus, Search, Pencil, Trash2, ShoppingCart } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import ProductFormDialog from "../components/products/ProductFormDialog";
-import { useRole } from "../components/shared/useRole";
 
 const categoryLabels = {
   fresh_produce: "Fresh Produce", frozen: "Frozen", dairy: "Dairy", beverages: "Beverages",
@@ -22,7 +21,6 @@ export default function Products() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const queryClient = useQueryClient();
-  const { canWrite } = useRole();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
@@ -64,11 +62,9 @@ export default function Products() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        {canWrite && (
-          <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="w-4 h-4 mr-1.5" /> Add Product
-          </Button>
-        )}
+        <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+          <Plus className="w-4 h-4 mr-1.5" /> Add Product
+        </Button>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
@@ -77,8 +73,8 @@ export default function Products() {
             icon={ShoppingCart}
             title="No products yet"
             description="Add your first product to start managing inventory"
-            actionLabel={canWrite ? "Add Product" : undefined}
-            onAction={canWrite ? () => { setEditProduct(null); setDialogOpen(true); } : undefined}
+            actionLabel="Add Product"
+            onAction={() => { setEditProduct(null); setDialogOpen(true); }}
           />
         ) : (
           <div className="overflow-x-auto">
@@ -103,18 +99,16 @@ export default function Products() {
                     <TableCell><StatusBadge status={product.storage_type} /></TableCell>
                     <TableCell className="text-right text-sm">{product.unit_cost ? `$${product.unit_cost.toFixed(2)}` : "—"}</TableCell>
                     <TableCell className="text-sm">{product.is_halal_certified ? "✓" : "—"}</TableCell>
-                    {canWrite && (
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditProduct(product); setDialogOpen(true); }}>
-                            <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(product.id)}>
-                            <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    )}
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditProduct(product); setDialogOpen(true); }}>
+                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(product.id)}>
+                          <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -123,15 +117,13 @@ export default function Products() {
         )}
       </div>
 
-      {canWrite && (
-        <ProductFormDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          product={editProduct}
-          onSave={handleSave}
-          saving={createMutation.isPending || updateMutation.isPending}
-        />
-      )}
+      <ProductFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        product={editProduct}
+        onSave={handleSave}
+        saving={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }

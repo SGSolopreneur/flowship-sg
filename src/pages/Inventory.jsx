@@ -13,7 +13,6 @@ import InventoryFormDialog from "../components/inventory/InventoryFormDialog";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
 import StockMovementHistory from "../components/inventory/StockMovementHistory";
-import { useRole } from "../components/shared/useRole";
 
 export default function Inventory() {
   const [search, setSearch] = useState("");
@@ -25,7 +24,10 @@ export default function Inventory() {
   const [historyItem, setHistoryItem] = useState(null);
   const queryClient = useQueryClient();
 
-  const { user: currentUser, canWrite } = useRole();
+  const { data: currentUser } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => base44.auth.me(),
+  });
 
   const { data: inventory = [] } = useQuery({
     queryKey: ["inventory"],
@@ -150,16 +152,12 @@ export default function Inventory() {
           </Tabs>
         </div>
         <div className="flex gap-2">
-          {canWrite && (
-            <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
-              <ScanLine className="w-4 h-4 mr-1.5" /> Scan
-            </Button>
-          )}
-          {canWrite && (
-            <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-              <Plus className="w-4 h-4 mr-1.5" /> Add Stock
-            </Button>
-          )}
+          <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+            <ScanLine className="w-4 h-4 mr-1.5" /> Scan
+          </Button>
+          <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Stock
+          </Button>
         </div>
       </div>
 
@@ -169,8 +167,8 @@ export default function Inventory() {
             icon={Package}
             title="No inventory records"
             description="Start adding stock to track your warehouse and store inventory"
-            actionLabel={canWrite ? "Add Stock" : undefined}
-            onAction={canWrite ? () => { setEditItem(null); setDialogOpen(true); } : undefined}
+            actionLabel="Add Stock"
+            onAction={() => { setEditItem(null); setDialogOpen(true); }}
           />
         ) : (
           <div className="overflow-x-auto">
@@ -213,24 +211,18 @@ export default function Inventory() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
-                              <ScanLine className="w-3.5 h-3.5 text-emerald-500" />
-                            </Button>
-                          )}
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
+                            <ScanLine className="w-3.5 h-3.5 text-emerald-500" />
+                          </Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7" title="View history" onClick={() => setHistoryItem(item)}>
                             <History className="w-3.5 h-3.5 text-slate-400" />
                           </Button>
-                          {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditItem(item); setDialogOpen(true); }}>
-                              <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                            </Button>
-                          )}
-                          {canWrite && (
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(item.id)}>
-                              <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                            </Button>
-                          )}
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditItem(item); setDialogOpen(true); }}>
+                            <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(item.id)}>
+                            <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -255,28 +247,24 @@ export default function Inventory() {
         />
       )}
 
-      {canWrite && (
-        <StockUpdateDialog
-          open={!!stockUpdateItem}
-          onOpenChange={(open) => { if (!open) setStockUpdateItem(null); }}
-          inventoryItem={stockUpdateItem}
-          product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
-          onSave={handleStockUpdate}
-          saving={updateMutation.isPending}
-        />
-      )}
+      <StockUpdateDialog
+        open={!!stockUpdateItem}
+        onOpenChange={(open) => { if (!open) setStockUpdateItem(null); }}
+        inventoryItem={stockUpdateItem}
+        product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
+        onSave={handleStockUpdate}
+        saving={updateMutation.isPending}
+      />
 
-      {canWrite && (
-        <InventoryFormDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          item={editItem}
-          products={products}
-          stores={stores}
-          onSave={handleSave}
-          saving={createMutation.isPending || updateMutation.isPending}
-        />
-      )}
+      <InventoryFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        item={editItem}
+        products={products}
+        stores={stores}
+        onSave={handleSave}
+        saving={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }

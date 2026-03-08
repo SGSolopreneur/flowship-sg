@@ -13,36 +13,23 @@ import {
   Warehouse,
   BarChart2,
   Building2,
-  TrendingUp,
-  LogOut,
-  ShieldCheck,
-  User,
+  TrendingUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useRole } from "@/components/shared/useRole";
-import { base44 } from "@/api/base44Client";
 
-// sensitive: true = only admin + manager can see
 const navItems = [
-  { name: "Dashboard",            icon: LayoutDashboard, page: "Dashboard",            sensitive: false },
-  { name: "Inventory",            icon: Package,         page: "Inventory",            sensitive: false },
-  { name: "Products",             icon: ShoppingCart,    page: "Products",             sensitive: false },
-  { name: "Stores",               icon: Store,           page: "Stores",               sensitive: false },
-  { name: "Transfers",            icon: Truck,           page: "Transfers",            sensitive: false },
-  { name: "Suppliers",            icon: Building2,       page: "Suppliers",            sensitive: true  },
-  { name: "Supplier Performance", icon: TrendingUp,      page: "SupplierPerformance",  sensitive: true  },
-  { name: "Analytics",            icon: BarChart2,       page: "Analytics",            sensitive: true  },
+  { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
+  { name: "Inventory", icon: Package, page: "Inventory" },
+  { name: "Products", icon: ShoppingCart, page: "Products" },
+  { name: "Stores", icon: Store, page: "Stores" },
+  { name: "Suppliers", icon: Building2, page: "Suppliers" },
+  { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance" },
+  { name: "Transfers", icon: Truck, page: "Transfers" },
+  { name: "Analytics", icon: BarChart2, page: "Analytics" },
 ];
-
-const roleConfig = {
-  admin:   { label: "Admin",   color: "text-emerald-400", bg: "bg-emerald-500/15" },
-  manager: { label: "Manager", color: "text-blue-400",    bg: "bg-blue-500/15"    },
-  staff:   { label: "Staff",   color: "text-slate-400",   bg: "bg-white/5"        },
-};
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, role, canAccessSensitive } = useRole();
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -79,57 +66,35 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-          {navItems
-            .filter(item => !item.sensitive || canAccessSensitive)
-            .map((item) => {
-              const isActive = currentPageName === item.page;
-              return (
-                <Link
-                  key={item.page}
-                  to={createPageUrl(item.page)}
-                  onClick={() => setSidebarOpen(false)}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-emerald-500/15 text-emerald-400"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  )}
-                >
-                  <item.icon className={cn("w-[18px] h-[18px]", isActive && "text-emerald-400")} />
-                  <span>{item.name}</span>
-                  {isActive && <ChevronRight className="w-4 h-4 ml-auto text-emerald-400/50" />}
-                </Link>
-              );
-            })}
+        <nav className="flex-1 py-4 px-3 space-y-1">
+          {navItems.map((item) => {
+            const isActive = currentPageName === item.page;
+            return (
+              <Link
+                key={item.page}
+                to={createPageUrl(item.page)}
+                onClick={() => setSidebarOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                  isActive
+                    ? "bg-emerald-500/15 text-emerald-400"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <item.icon className={cn("w-[18px] h-[18px]", isActive && "text-emerald-400")} />
+                <span>{item.name}</span>
+                {isActive && <ChevronRight className="w-4 h-4 ml-auto text-emerald-400/50" />}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="p-4 border-t border-white/10">
           <div className="bg-white/5 rounded-lg p-3">
             <p className="text-[11px] text-slate-500 uppercase tracking-wider">Region</p>
             <p className="text-sm text-slate-300 font-medium mt-0.5">Singapore 🇸🇬</p>
           </div>
-          {user && (
-            <div className={cn("rounded-lg p-3 flex items-center gap-2.5", roleConfig[role]?.bg || "bg-white/5")}>
-              <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <User className="w-3.5 h-3.5 text-slate-300" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-slate-200 truncate">{user.full_name || user.email}</p>
-                <p className={cn("text-[10px] font-semibold uppercase tracking-wider", roleConfig[role]?.color || "text-slate-400")}>
-                  {roleConfig[role]?.label || role}
-                </p>
-              </div>
-              <button
-                onClick={() => base44.auth.logout()}
-                className="text-slate-500 hover:text-slate-300 transition-colors shrink-0"
-                title="Sign out"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          )}
         </div>
       </aside>
 

@@ -17,7 +17,6 @@ import StockRequestFormDialog from "../components/transfers/StockRequestFormDial
 import ApprovalPanel from "../components/transfers/ApprovalPanel";
 import ShipmentVerifier from "../components/transfers/ShipmentVerifier";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
-import { useRole } from "../components/shared/useRole";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
 
@@ -30,7 +29,7 @@ export default function Transfers() {
   const [scannerOpen, setScannerOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const { user: currentUser, canWrite } = useRole();
+  const { data: currentUser } = useQuery({ queryKey: ["me"], queryFn: () => base44.auth.me() });
 
   const { data: stockRequests = [] } = useQuery({
     queryKey: ["stockRequests"],
@@ -182,11 +181,9 @@ export default function Transfers() {
             <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
               <ClipboardList className="w-4 h-4 mr-1.5" /> Request Stock
             </Button>
-            {canWrite && (
-              <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
-                <Plus className="w-4 h-4 mr-1.5" /> New Transfer
-              </Button>
-            )}
+            <Button onClick={() => setDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700">
+              <Plus className="w-4 h-4 mr-1.5" /> New Transfer
+            </Button>
           </div>
         </div>
 
@@ -217,8 +214,8 @@ export default function Transfers() {
                 icon={Truck}
                 title="No transfer orders"
                 description="Create your first transfer to move stock from warehouse to stores"
-                actionLabel={canWrite ? "New Transfer" : undefined}
-                onAction={canWrite ? () => setDialogOpen(true) : undefined}
+                actionLabel="New Transfer"
+                onAction={() => setDialogOpen(true)}
               />
             ) : (
               <div className="overflow-x-auto">

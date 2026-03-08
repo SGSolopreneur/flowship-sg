@@ -7,7 +7,6 @@ import { Plus, Search, Pencil, Trash2, Store as StoreIcon, MapPin, Phone } from 
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import StoreFormDialog from "../components/stores/StoreFormDialog";
-import { useRole } from "../components/shared/useRole";
 
 const regionLabels = { north: "North", south: "South", east: "East", west: "West", central: "Central" };
 const typeLabels = { hypermarket: "Hypermarket", supermarket: "Supermarket", minimart: "Minimart", express: "Express" };
@@ -17,7 +16,6 @@ export default function Stores() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editStore, setEditStore] = useState(null);
   const queryClient = useQueryClient();
-  const { canWrite } = useRole();
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -56,11 +54,9 @@ export default function Stores() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input placeholder="Search stores..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        {canWrite && (
-          <Button onClick={() => { setEditStore(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="w-4 h-4 mr-1.5" /> Add Store
-          </Button>
-        )}
+        <Button onClick={() => { setEditStore(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+          <Plus className="w-4 h-4 mr-1.5" /> Add Store
+        </Button>
       </div>
 
       {filtered.length === 0 ? (
@@ -69,8 +65,8 @@ export default function Stores() {
             icon={StoreIcon}
             title="No stores yet"
             description="Add your supermarket locations to manage distribution"
-            actionLabel={canWrite ? "Add Store" : undefined}
-            onAction={canWrite ? () => { setEditStore(null); setDialogOpen(true); } : undefined}
+            actionLabel="Add Store"
+            onAction={() => { setEditStore(null); setDialogOpen(true); }}
           />
         </div>
       ) : (
@@ -100,30 +96,26 @@ export default function Stores() {
                   </div>
                 )}
               </div>
-              {canWrite && (
-                <div className="flex gap-2 pt-3 border-t border-slate-100">
-                  <Button variant="outline" size="sm" className="text-xs flex-1" onClick={() => { setEditStore(store); setDialogOpen(true); }}>
-                    <Pencil className="w-3 h-3 mr-1" /> Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => deleteMutation.mutate(store.id)}>
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              )}
+              <div className="flex gap-2 pt-3 border-t border-slate-100">
+                <Button variant="outline" size="sm" className="text-xs flex-1" onClick={() => { setEditStore(store); setDialogOpen(true); }}>
+                  <Pencil className="w-3 h-3 mr-1" /> Edit
+                </Button>
+                <Button variant="outline" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => deleteMutation.mutate(store.id)}>
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      {canWrite && (
-        <StoreFormDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          store={editStore}
-          onSave={handleSave}
-          saving={createMutation.isPending || updateMutation.isPending}
-        />
-      )}
+      <StoreFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        store={editStore}
+        onSave={handleSave}
+        saving={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }
