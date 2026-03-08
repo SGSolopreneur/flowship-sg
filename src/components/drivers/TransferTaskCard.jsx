@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Check, AlertCircle, Loader2 } from "lucide-react";
+import { MapPin, Check, AlertCircle, Loader2, Camera } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import DeliveryConfirmationDialog from "./DeliveryConfirmationDialog";
 
 const statusColors = {
   confirmed: "bg-blue-100 text-blue-700",
@@ -21,6 +22,7 @@ export default function TransferTaskCard({ transfer, onUpdateLocation, onConfirm
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [locationError, setLocationError] = useState("");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -178,11 +180,11 @@ export default function TransferTaskCard({ transfer, onUpdateLocation, onConfirm
         {/* Confirm Delivery */}
         {isDeliverable && (
           <Button
-            onClick={() => onConfirmDelivery()}
+            onClick={() => setConfirmDialogOpen(true)}
             disabled={confirming}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-9 gap-2"
           >
-            {confirming ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+            {confirming ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
             Confirm Delivery
           </Button>
         )}
@@ -193,9 +195,21 @@ export default function TransferTaskCard({ transfer, onUpdateLocation, onConfirm
             {transfer.actual_delivery_date && (
               <p className="text-[10px] text-emerald-600">{format(new Date(transfer.actual_delivery_date), "dd MMM yyyy")}</p>
             )}
+            {transfer.recipient_name && (
+              <p className="text-[10px] text-emerald-600 mt-1">Recipient: {transfer.recipient_name}</p>
+            )}
           </div>
         )}
       </CardContent>
+
+      {/* Delivery Confirmation Dialog */}
+      <DeliveryConfirmationDialog
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+        transfer={transfer}
+        onConfirm={onConfirmDelivery}
+        confirming={confirming}
+      />
     </Card>
   );
 }
