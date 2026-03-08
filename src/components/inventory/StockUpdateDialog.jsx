@@ -27,7 +27,7 @@ export default function StockUpdateDialog({ open, onOpenChange, inventoryItem, p
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(inventoryItem.id, getNewQty());
+    onSave(inventoryItem.id, getNewQty(), mode);
     setQuantity("");
     setMode("set");
   };
