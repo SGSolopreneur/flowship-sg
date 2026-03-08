@@ -123,13 +123,15 @@ export default function Products() {
         )}
       </div>
 
-      <ProductFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        product={editProduct}
-        onSave={handleSave}
-        saving={createMutation.isPending || updateMutation.isPending}
-      />
+      {canWrite && (
+        <ProductFormDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          product={editProduct}
+          onSave={handleSave}
+          saving={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
     </div>
   );
 }
