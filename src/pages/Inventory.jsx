@@ -46,9 +46,18 @@ export default function Inventory() {
     mutationFn: (data) => base44.entities.InventoryItem.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["inventory"] }); setDialogOpen(false); },
   });
+  const logMovementMutation = useMutation({
+    mutationFn: (data) => base44.entities.StockMovement.create(data),
+  });
+
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.InventoryItem.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["inventory"] }); setDialogOpen(false); setStockUpdateItem(null); },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      queryClient.invalidateQueries({ queryKey: ["stockMovements", variables.id] });
+      setDialogOpen(false);
+      setStockUpdateItem(null);
+    },
   });
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.InventoryItem.delete(id),
