@@ -175,6 +175,9 @@ export default function Transfers() {
             </TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-slate-200 text-slate-600 hover:bg-slate-50">
+              <ScanLine className="w-4 h-4 mr-1.5" /> Scan
+            </Button>
             <Button variant="outline" onClick={() => setRequestDialogOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
               <ClipboardList className="w-4 h-4 mr-1.5" /> Request Stock
             </Button>
