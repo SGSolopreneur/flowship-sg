@@ -9,6 +9,7 @@ import RecentTransfers from "../components/dashboard/RecentTransfers";
 import CategoryBreakdown from "../components/dashboard/CategoryBreakdown";
 import ReorderSuggestions from "../components/dashboard/ReorderSuggestions";
 import ExpiryAlert from "../components/dashboard/ExpiryAlert";
+import VehicleMap from "../components/dashboard/VehicleMap";
 import { generateStockSummaryPDF } from "../components/shared/PdfReportGenerator";
 
 export default function Dashboard() {
@@ -35,6 +36,11 @@ export default function Dashboard() {
   const { data: suppliers = [] } = useQuery({
     queryKey: ["suppliers"],
     queryFn: () => base44.entities.Supplier.list(),
+  });
+
+  const { data: vehicles = [] } = useQuery({
+    queryKey: ["vehicles"],
+    queryFn: () => base44.entities.Vehicle.list(),
   });
 
   const warehouseStock = inventory.filter(i => i.location_type === "warehouse");
@@ -73,6 +79,12 @@ export default function Dashboard() {
         <StatCard title="Active Stores" value={activeStores} icon={Store} color="violet" subtitle={`of ${stores.length} total`} />
         <StatCard title="Pending Transfers" value={pendingTransfers} icon={Truck} color="amber" subtitle="In progress" />
         <StatCard title="Low Stock" value={lowStockCount} icon={AlertTriangle} color="red" subtitle="Need attention" />
+      </div>
+
+      {/* Vehicle Map */}
+      <div>
+        <h2 className="text-sm font-semibold text-slate-800 mb-3">Live Vehicle Tracking</h2>
+        <VehicleMap transfers={transfers} vehicles={vehicles} />
       </div>
 
       {/* Charts + Alerts */}
