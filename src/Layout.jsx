@@ -123,7 +123,7 @@ export default function Layout({ children, currentPageName }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto overscroll-none">
           {children}
         </main>
       </div>
