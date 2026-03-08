@@ -25,6 +25,8 @@ export default function Transfers() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [verifierOrder, setVerifierOrder] = useState(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({ queryKey: ["me"], queryFn: () => base44.auth.me() });
