@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   ChevronRight,
-  Warehouse
+  Warehouse,
+  BarChart2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
