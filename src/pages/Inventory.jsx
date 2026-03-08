@@ -119,8 +119,11 @@ export default function Inventory() {
     }
   };
 
-  const handleStockUpdate = (itemId, newQuantity) => {
+  const handleStockUpdate = (itemId, newQuantity, mode) => {
+    const item = inventory.find(i => i.id === itemId);
+    const source = scannerOpen ? "barcode_scan" : "manual_edit";
     updateMutation.mutate({ id: itemId, data: { quantity: newQuantity } });
+    if (item) logMovement(item, newQuantity, mode || "set", source);
   };
 
   const filtered = inventory
