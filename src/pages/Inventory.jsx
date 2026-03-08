@@ -97,9 +97,14 @@ export default function Inventory() {
             </TabsList>
           </Tabs>
         </div>
-        <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="w-4 h-4 mr-1.5" /> Add Stock
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setScannerOpen(true)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+            <ScanLine className="w-4 h-4 mr-1.5" /> Scan
+          </Button>
+          <Button onClick={() => { setEditItem(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Stock
+          </Button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
