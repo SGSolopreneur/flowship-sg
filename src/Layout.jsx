@@ -66,6 +66,15 @@ export default function Layout({ children, currentPageName }) {
             <LogIn className="w-4 h-4" />
             Sign In
           </Button>
+          <p className="text-xs text-slate-400">
+            By signing in, you agree to our{" "}
+            <a
+              href={createPageUrl("PrivacyPolicy")}
+              className="text-emerald-600 underline hover:text-emerald-700"
+            >
+              Privacy & User Data Policy
+            </a>
+          </p>
         </div>
       </div>
     );
