@@ -39,8 +39,45 @@ const navItems = [
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const { canAccessSensitive, role } = useRole();
   const visibleNavItems = navItems.filter(item => !item.sensitive || canAccessSensitive);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(setIsAuthenticated);
+  }, []);
+
+  if (isAuthenticated === false) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-sm text-center space-y-6">
+          <div className="w-14 h-14 rounded-xl bg-emerald-500 flex items-center justify-center mx-auto">
+            <Warehouse className="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">WarehouseSG</h1>
+            <p className="text-sm text-slate-500 mt-1">Distribution Hub — Singapore</p>
+          </div>
+          <p className="text-sm text-slate-600">Sign in with your credentials to access the platform.</p>
+          <Button
+            className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+            onClick={() => base44.auth.redirectToLogin()}
+          >
+            <LogIn className="w-4 h-4" />
+            Sign In
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
