@@ -66,6 +66,12 @@ export default function Layout({ children, currentPageName }) {
             <LogIn className="w-4 h-4" />
             Sign In
           </Button>
+          <a
+            href="mailto:contact@flowshipsg.com"
+            className="w-full inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+          >
+            Contact Us
+          </a>
           <p className="text-xs text-slate-400">
             By signing in, you agree to our{" "}
             <a
