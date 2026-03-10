@@ -58,6 +58,7 @@ import SupplierPerformance from './pages/SupplierPerformance';
 import Suppliers from './pages/Suppliers';
 import Transfers from './pages/Transfers';
 import Vehicles from './pages/Vehicles';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "Suppliers": Suppliers,
     "Transfers": Transfers,
     "Vehicles": Vehicles,
+    "PrivacyPolicy": PrivacyPolicy,
 }
 
 export const pagesConfig = {
