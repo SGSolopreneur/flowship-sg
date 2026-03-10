@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
@@ -15,9 +15,12 @@ import {
   Building2,
   TrendingUp,
   ShieldCheck,
+  LogIn,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shared/useRole";
+import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
 
 // sensitive: only admin + manager can see
 const navItems = [
