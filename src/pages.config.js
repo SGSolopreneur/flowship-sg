@@ -52,13 +52,13 @@ import AutomatedReporting from './pages/AutomatedReporting';
 import Dashboard from './pages/Dashboard';
 import DriverDashboard from './pages/DriverDashboard';
 import Inventory from './pages/Inventory';
-import PrivacyPolicy from './pages/PrivacyPolicy';
 import Products from './pages/Products';
 import Stores from './pages/Stores';
 import SupplierPerformance from './pages/SupplierPerformance';
 import Suppliers from './pages/Suppliers';
 import Transfers from './pages/Transfers';
 import Vehicles from './pages/Vehicles';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import __Layout from './Layout.jsx';
 
 
@@ -68,13 +68,13 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "DriverDashboard": DriverDashboard,
     "Inventory": Inventory,
-    "PrivacyPolicy": PrivacyPolicy,
     "Products": Products,
     "Stores": Stores,
     "SupplierPerformance": SupplierPerformance,
     "Suppliers": Suppliers,
     "Transfers": Transfers,
     "Vehicles": Vehicles,
+    "PrivacyPolicy": PrivacyPolicy,
 }
 
 export const pagesConfig = {

@@ -16,7 +16,6 @@ import {
   TrendingUp,
   ShieldCheck,
   LogIn,
-  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shared/useRole";
@@ -153,13 +152,6 @@ export default function Layout({ children, currentPageName }) {
             <p className="text-[11px] text-slate-500 uppercase tracking-wider">Region</p>
             <p className="text-sm text-slate-300 font-medium mt-0.5">Singapore 🇸🇬</p>
           </div>
-          <a
-            href="mailto:contact@flowshipsg.com"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            <span>Contact Us</span>
-          </a>
           <div className="flex items-center gap-2 px-1">
             <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
             <span className="text-[11px] text-slate-500 capitalize">{role} access</span>
