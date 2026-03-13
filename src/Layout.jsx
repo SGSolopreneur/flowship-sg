@@ -36,6 +36,7 @@ const navItems = [
   { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance", sensitive: true },
   { name: "Automated Reports", icon: BarChart2, page: "AutomatedReporting", sensitive: true },
   { name: "Analytics", icon: BarChart2, page: "Analytics", sensitive: true },
+  { name: "Activity Log", icon: ShieldCheck, page: "ActivityLog", sensitive: true },
 ];
 
 export default function Layout({ children, currentPageName }) {
