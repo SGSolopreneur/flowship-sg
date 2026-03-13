@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Clock, User, FileText, Shield } from "lucide-react";
+import { Search, Clock, User, FileText, Shield, Download } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import EmptyState from "../components/shared/EmptyState";
+import { useRole } from "../components/shared/useRole";
 
 const actionTypeLabels = {
   stock_adjustment: "Stock Adjustment",
@@ -70,10 +72,40 @@ export default function ActivityLog() {
   const [actionTypeFilter, setActionTypeFilter] = useState("all");
   const [severityFilter, setSeverityFilter] = useState("all");
 
+  const { canAccessSensitive } = useRole();
+
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ["activityLogs"],
     queryFn: () => base44.entities.ActivityLog.list("-created_date", 200),
   });
+
+  const exportToCSV = () => {
+    const headers = ["Timestamp", "Action", "Description", "Entity", "User", "Email", "Severity"];
+    const rows = filtered.map(log => [
+      format(new Date(log.created_date), "yyyy-MM-dd HH:mm:ss"),
+      actionTypeLabels[log.action_type] || log.action_type,
+      log.description,
+      log.entity_name || "",
+      log.performed_by_name || log.performed_by?.split('@')[0] || "",
+      log.performed_by || "",
+      log.severity
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `activity-log-${format(new Date(), "yyyy-MM-dd-HHmm")}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const filtered = logs
     .filter(log => actionTypeFilter === "all" || log.action_type === actionTypeFilter)
@@ -87,12 +119,25 @@ export default function ActivityLog() {
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4 w-full">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-amber-600" />
-          <h1 className="text-lg font-bold text-amber-900">Activity Log</h1>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-amber-600" />
+            <h1 className="text-lg font-bold text-amber-900">Activity Log</h1>
+          </div>
+          <p className="text-xs text-amber-700">Track all sensitive actions and changes across the system</p>
         </div>
-        <p className="text-xs text-amber-700">Track all sensitive actions and changes across the system</p>
+        {canAccessSensitive && (
+          <Button
+            onClick={exportToCSV}
+            variant="outline"
+            className="border-amber-300 text-amber-700 hover:bg-amber-50 gap-2"
+            disabled={filtered.length === 0}
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </Button>
+        )}
       </div>
 
       {/* Filters */}
