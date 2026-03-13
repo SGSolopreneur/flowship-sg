@@ -7,17 +7,28 @@ Deno.serve(async (req) => {
     const payload = await req.json();
     const schedule_id = payload.schedule_id;
 
-    if (!schedule_id) {
-      return Response.json({ error: 'schedule_id is required' }, { status: 400 });
+    // If schedule_id is "auto" or missing, fetch all active schedules
+    let schedules = [];
+    if (!schedule_id || schedule_id === 'auto') {
+      schedules = await base44.asServiceRole.entities.ReportSchedule.filter({ status: 'active' });
+      if (schedules.length === 0) {
+        return Response.json({ 
+          success: true, 
+          message: 'No active report schedules found' 
+        });
+      }
+    } else {
+      const result = await base44.asServiceRole.entities.ReportSchedule.filter({ id: schedule_id });
+      if (result.length === 0) {
+        return Response.json({ error: 'Schedule not found' }, { status: 404 });
+      }
+      schedules = result;
     }
 
-    // Fetch the schedule
-    const schedules = await base44.asServiceRole.entities.ReportSchedule.filter({ id: schedule_id });
-    const schedule = schedules[0];
-
-    if (!schedule) {
-      return Response.json({ error: 'Schedule not found' }, { status: 404 });
-    }
+    const results = [];
+    
+    // Process each schedule
+    for (const schedule of schedules) {
 
     // Fetch report data
     const [inventoryItems, stockMovements, suppliers] = await Promise.all([
@@ -178,24 +189,32 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-    // Send emails to all recipients
-    for (const recipient of schedule.recipients) {
-      await base44.integrations.Core.SendEmail({
-        to: recipient,
-        subject: `${schedule.name} - ${new Date().toLocaleDateString()}`,
-        body: reportHtml
+      // Send emails to all recipients
+      for (const recipient of schedule.recipients) {
+        await base44.integrations.Core.SendEmail({
+          to: recipient,
+          subject: `${schedule.name} - ${new Date().toLocaleDateString()}`,
+          body: reportHtml
+        });
+      }
+
+      // Update last_sent timestamp
+      await base44.asServiceRole.entities.ReportSchedule.update(schedule.id, {
+        last_sent: new Date().toISOString()
+      });
+
+      results.push({
+        schedule_id: schedule.id,
+        schedule_name: schedule.name,
+        recipients_count: schedule.recipients.length,
+        recipients: schedule.recipients
       });
     }
 
-    // Update last_sent timestamp
-    await base44.asServiceRole.entities.ReportSchedule.update(schedule_id, {
-      last_sent: new Date().toISOString()
-    });
-
     return Response.json({
       success: true,
-      message: `Report sent to ${schedule.recipients.length} recipients`,
-      recipients: schedule.recipients
+      message: `Processed ${results.length} report schedule(s)`,
+      results
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
