@@ -2,16 +2,16 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
-export default function StatCard({ title, value, subtitle, icon: Icon, trend, trendUp, color = "emerald", to }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, trend, trendUp, color = "amber", to }) {
   const colorMap = {
-    emerald: { bg: "bg-emerald-50", icon: "bg-emerald-500", text: "text-emerald-600" },
-    blue: { bg: "bg-blue-50", icon: "bg-blue-500", text: "text-blue-600" },
+    orange: { bg: "bg-orange-50", icon: "bg-orange-500", text: "text-orange-600" },
     amber: { bg: "bg-amber-50", icon: "bg-amber-500", text: "text-amber-600" },
+    yellow: { bg: "bg-yellow-50", icon: "bg-yellow-500", text: "text-yellow-600" },
     red: { bg: "bg-red-50", icon: "bg-red-500", text: "text-red-600" },
-    violet: { bg: "bg-violet-50", icon: "bg-violet-500", text: "text-violet-600" },
+    emerald: { bg: "bg-emerald-50", icon: "bg-emerald-500", text: "text-emerald-600" },
   };
 
-  const c = colorMap[color] || colorMap.emerald;
+  const c = colorMap[color] || colorMap.amber;
 
   const content = (
     <>

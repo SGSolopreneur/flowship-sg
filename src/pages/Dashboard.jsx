@@ -53,17 +53,17 @@ export default function Dashboard() {
   }).length;
 
   return (
-    <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto w-full">
+    <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto w-full bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 min-h-screen">
       {/* Header with report download */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-lg font-bold text-slate-800">Dashboard</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Live overview · Singapore SGT</p>
+          <h1 className="text-lg font-bold text-amber-900">Dashboard</h1>
+          <p className="text-xs text-amber-600 mt-0.5">Live overview · Singapore SGT</p>
         </div>
         <Button
           variant="outline"
           size="sm"
-          className="border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5 w-full sm:w-auto"
+          className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-1.5 w-full sm:w-auto"
           onClick={() => generateStockSummaryPDF({ inventory, products, stores })}
         >
           <FileDown className="w-4 h-4" />
@@ -74,16 +74,16 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
-        <StatCard title="Products" value={products.length} icon={ShoppingCart} color="blue" subtitle="In catalog" to="/Products" />
-        <StatCard title="Warehouse Stock" value={totalWarehouseQty.toLocaleString()} icon={Package} color="emerald" subtitle="Total units" to="/Inventory" />
-        <StatCard title="Active Stores" value={activeStores} icon={Store} color="violet" subtitle={`of ${stores.length} total`} to="/Stores" />
+        <StatCard title="Products" value={products.length} icon={ShoppingCart} color="orange" subtitle="In catalog" to="/Products" />
+        <StatCard title="Warehouse Stock" value={totalWarehouseQty.toLocaleString()} icon={Package} color="amber" subtitle="Total units" to="/Inventory" />
+        <StatCard title="Active Stores" value={activeStores} icon={Store} color="yellow" subtitle={`of ${stores.length} total`} to="/Stores" />
         <StatCard title="Pending Transfers" value={pendingTransfers} icon={Truck} color="amber" subtitle="In progress" to="/Transfers" />
         <StatCard title="Low Stock" value={lowStockCount} icon={AlertTriangle} color="red" subtitle="Need attention" to="/Inventory" />
       </div>
 
       {/* Vehicle Map */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-800 mb-3">Live Vehicle Tracking</h2>
+        <h2 className="text-sm font-semibold text-amber-900 mb-3">Live Vehicle Tracking</h2>
         <VehicleMap transfers={transfers} vehicles={vehicles} />
       </div>
 
