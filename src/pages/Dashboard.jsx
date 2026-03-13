@@ -74,11 +74,11 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
-        <StatCard title="Products" value={products.length} icon={ShoppingCart} color="blue" subtitle="In catalog" />
-        <StatCard title="Warehouse Stock" value={totalWarehouseQty.toLocaleString()} icon={Package} color="emerald" subtitle="Total units" />
-        <StatCard title="Active Stores" value={activeStores} icon={Store} color="violet" subtitle={`of ${stores.length} total`} />
-        <StatCard title="Pending Transfers" value={pendingTransfers} icon={Truck} color="amber" subtitle="In progress" />
-        <StatCard title="Low Stock" value={lowStockCount} icon={AlertTriangle} color="red" subtitle="Need attention" />
+        <StatCard title="Products" value={products.length} icon={ShoppingCart} color="blue" subtitle="In catalog" to="/Products" />
+        <StatCard title="Warehouse Stock" value={totalWarehouseQty.toLocaleString()} icon={Package} color="emerald" subtitle="Total units" to="/Inventory" />
+        <StatCard title="Active Stores" value={activeStores} icon={Store} color="violet" subtitle={`of ${stores.length} total`} to="/Stores" />
+        <StatCard title="Pending Transfers" value={pendingTransfers} icon={Truck} color="amber" subtitle="In progress" to="/Transfers" />
+        <StatCard title="Low Stock" value={lowStockCount} icon={AlertTriangle} color="red" subtitle="Need attention" to="/Inventory" />
       </div>
 
       {/* Vehicle Map */}

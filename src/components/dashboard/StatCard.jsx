@@ -1,7 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
-export default function StatCard({ title, value, subtitle, icon: Icon, trend, trendUp, color = "emerald" }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, trend, trendUp, color = "emerald", to }) {
   const colorMap = {
     emerald: { bg: "bg-emerald-50", icon: "bg-emerald-500", text: "text-emerald-600" },
     blue: { bg: "bg-blue-50", icon: "bg-blue-500", text: "text-blue-600" },
@@ -12,8 +13,8 @@ export default function StatCard({ title, value, subtitle, icon: Icon, trend, tr
 
   const c = colorMap[color] || colorMap.emerald;
 
-  return (
-    <div className="bg-white rounded-xl border border-slate-200/80 p-5 hover:shadow-md transition-shadow duration-300">
+  const content = (
+    <>
       <div className="flex items-start justify-between">
         <div className="space-y-2">
           <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{title}</p>
@@ -29,6 +30,20 @@ export default function StatCard({ title, value, subtitle, icon: Icon, trend, tr
           <Icon className="w-5 h-5 text-white" />
         </div>
       </div>
+    </>
+  );
+
+  if (to) {
+    return (
+      <Link to={to} className="block bg-white rounded-xl border border-slate-200/80 p-5 hover:shadow-md transition-shadow duration-300 hover:border-slate-300">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-slate-200/80 p-5 hover:shadow-md transition-shadow duration-300">
+      {content}
     </div>
   );
 }
