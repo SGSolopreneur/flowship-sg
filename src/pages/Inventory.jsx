@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, Package, ScanLine, History, Upload } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Package, ScanLine, History, Upload, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
@@ -16,6 +16,7 @@ import StockUpdateDialog from "../components/inventory/StockUpdateDialog";
 import StockMovementHistory from "../components/inventory/StockMovementHistory";
 import CsvImportDialog from "../components/inventory/CsvImportDialog";
 import WarehouseFloorPlan from "../components/inventory/WarehouseFloorPlan";
+import AdjustStockDialog from "../components/inventory/AdjustStockDialog";
 
 export default function Inventory() {
   const [search, setSearch] = useState("");
@@ -24,6 +25,7 @@ export default function Inventory() {
   const [editItem, setEditItem] = useState(null);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [stockUpdateItem, setStockUpdateItem] = useState(null);
+  const [adjustStockItem, setAdjustStockItem] = useState(null);
   const [historyItem, setHistoryItem] = useState(null);
   const [csvImportOpen, setCsvImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -126,6 +128,33 @@ export default function Inventory() {
     const source = scannerOpen ? "barcode_scan" : "manual_edit";
     updateMutation.mutate({ id: itemId, data: { quantity: newQuantity } });
     if (item) logMovement(item, newQuantity, mode || "set", source);
+  };
+
+  const handleAdjustStock = (itemId, newQuantity, mode, reason) => {
+    const item = inventory.find(i => i.id === itemId);
+    updateMutation.mutate({ id: itemId, data: { quantity: newQuantity } });
+    if (item) {
+      const before = item.quantity || 0;
+      const after = newQuantity;
+      let adjustmentType;
+      if (mode === "add") adjustmentType = "in";
+      else if (mode === "remove") adjustmentType = "out";
+      else adjustmentType = "reset";
+
+      logMovementMutation.mutate({
+        inventory_item_id: item.id,
+        product_name: item.product_name,
+        sku: item.sku,
+        location_name: item.location_name,
+        adjustment_type: adjustmentType,
+        quantity_before: before,
+        quantity_change: after - before,
+        quantity_after: after,
+        source: "manual_edit",
+        notes: reason,
+        performed_by: currentUser?.email || "unknown",
+      });
+    }
   };
 
   const filtered = inventory
@@ -267,6 +296,11 @@ export default function Inventory() {
                       <TableCell>
                         <div className="flex gap-1">
                           {canWrite && (
+                            <Button variant="ghost" size="icon" className="h-8 w-8" title="Adjust stock" onClick={() => setAdjustStockItem(item)}>
+                              <TrendingUp className="w-3.5 h-3.5 text-amber-500" />
+                            </Button>
+                          )}
+                          {canWrite && (
                             <Button variant="ghost" size="icon" className="h-8 w-8" title="Quick stock update" onClick={() => setStockUpdateItem(item)}>
                               <ScanLine className="w-3.5 h-3.5 text-emerald-500" />
                             </Button>
@@ -314,6 +348,15 @@ export default function Inventory() {
         inventoryItem={stockUpdateItem}
         product={stockUpdateItem ? products.find(p => p.id === stockUpdateItem.product_id) : null}
         onSave={handleStockUpdate}
+        saving={updateMutation.isPending}
+      />
+
+      <AdjustStockDialog
+        open={!!adjustStockItem}
+        onOpenChange={(open) => { if (!open) setAdjustStockItem(null); }}
+        inventoryItem={adjustStockItem}
+        product={adjustStockItem ? products.find(p => p.id === adjustStockItem.product_id) : null}
+        onSave={handleAdjustStock}
         saving={updateMutation.isPending}
       />
 
