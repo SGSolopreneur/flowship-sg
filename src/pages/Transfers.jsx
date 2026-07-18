@@ -337,15 +337,34 @@ export default function Transfers() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleStartPicking(order)}>
-                                <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Start Picking
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setVerifierOrder(order)}>
-                                <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify Shipment
-                              </DropdownMenuItem>
-                              {canWrite && order.status !== "delivered" && order.status !== "cancelled" && getNextStatusLabel(order.status) && (
-                                <DropdownMenuItem onClick={() => advanceStatus(order)}>
-                                  Move to {getNextStatusLabel(order.status)}
+                              {/* Draft → Confirm */}
+                              {canWrite && order.status === "draft" && (
+                                <DropdownMenuItem onClick={() => advanceStatus(order)} className="text-blue-600 font-medium">
+                                  <ArrowRight className="w-3.5 h-3.5 mr-1.5" /> Confirm Order
+                                </DropdownMenuItem>
+                              )}
+                              {/* Confirmed → Start Picking */}
+                              {canWrite && order.status === "confirmed" && (
+                                <DropdownMenuItem onClick={() => handleStartPicking(order)} className="text-blue-600 font-medium">
+                                  <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Start Picking
+                                </DropdownMenuItem>
+                              )}
+                              {/* Picking → Verify Shipment */}
+                              {order.status === "picking" && (
+                                <DropdownMenuItem onClick={() => setVerifierOrder(order)} className="text-emerald-600 font-medium">
+                                  <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify & Dispatch
+                                </DropdownMenuItem>
+                              )}
+                              {/* Dispatched → In Transit */}
+                              {canWrite && order.status === "dispatched" && (
+                                <DropdownMenuItem onClick={() => advanceStatus(order)} className="text-blue-600 font-medium">
+                                  <ArrowRight className="w-3.5 h-3.5 mr-1.5" /> Move to In Transit
+                                </DropdownMenuItem>
+                              )}
+                              {/* In Transit → Delivered */}
+                              {canWrite && order.status === "in_transit" && (
+                                <DropdownMenuItem onClick={() => advanceStatus(order)} className="text-emerald-600 font-medium">
+                                  <ArrowRight className="w-3.5 h-3.5 mr-1.5" /> Mark Delivered
                                 </DropdownMenuItem>
                               )}
                               {canWrite && order.status !== "delivered" && order.status !== "cancelled" && (
