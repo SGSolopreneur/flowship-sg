@@ -4,12 +4,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, ShoppingCart, QrCode } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, ShoppingCart, QrCode, Upload } from "lucide-react";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import ProductFormDialog from "../components/products/ProductFormDialog";
+import ProductBulkImportDialog from "../components/products/ProductBulkImportDialog";
 import QRCodeGenerator from "../components/products/QRCodeGenerator";
 import { useRole } from "../components/shared/useRole";
+import { toast } from "react-hot-toast";
 
 const categoryLabels = {
   fresh_produce: "Fresh Produce", frozen: "Frozen", dairy: "Dairy", beverages: "Beverages",
@@ -23,6 +25,8 @@ export default function Products() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [qrProduct, setQrProduct] = useState(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
   const queryClient = useQueryClient();
   const { canWrite } = useRole();
 
@@ -54,6 +58,32 @@ export default function Products() {
     }
   };
 
+  const handleBulkImport = async (records, existingIds) => {
+    setImporting(true);
+    let created = 0, updated = 0, failed = 0;
+    for (let i = 0; i < records.length; i++) {
+      try {
+        if (existingIds[i]) {
+          await base44.entities.Product.update(existingIds[i], records[i]);
+          updated++;
+        } else {
+          await base44.entities.Product.create(records[i]);
+          created++;
+        }
+      } catch (err) {
+        failed++;
+      }
+    }
+    setImporting(false);
+    setImportOpen(false);
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+    if (failed > 0) {
+      toast.error(`Imported ${created + updated} products (${failed} failed)`);
+    } else {
+      toast.success(`Imported ${created} new, updated ${updated} products`);
+    }
+  };
+
   const filtered = products.filter(p =>
     p.name?.toLowerCase().includes(search.toLowerCase()) ||
     p.sku?.toLowerCase().includes(search.toLowerCase())
@@ -67,9 +97,14 @@ export default function Products() {
           <Input placeholder="Search products..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
         {canWrite && (
-          <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="w-4 h-4 mr-1.5" /> Add Product
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => setImportOpen(true)} variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+              <Upload className="w-4 h-4 mr-1.5" /> Bulk Import
+            </Button>
+            <Button onClick={() => { setEditProduct(null); setDialogOpen(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+              <Plus className="w-4 h-4 mr-1.5" /> Add Product
+            </Button>
+          </div>
         )}
       </div>
 
@@ -140,6 +175,14 @@ export default function Products() {
         open={!!qrProduct}
         onOpenChange={(open) => !open && setQrProduct(null)}
         product={qrProduct}
+      />
+
+      <ProductBulkImportDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        products={products}
+        onImport={handleBulkImport}
+        importing={importing}
       />
     </div>
   );
