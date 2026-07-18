@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
+import DatePicker from "../shared/DatePicker";
 
 export default function StockRequestFormDialog({ open, onOpenChange, stores, products, onSave, saving }) {
   const [form, setForm] = useState({
@@ -93,7 +94,11 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
             </div>
             <div className="col-span-2">
               <Label>Requested Delivery Date</Label>
-              <Input type="date" value={form.requested_delivery_date} onChange={e => setForm({ ...form, requested_delivery_date: e.target.value })} />
+              <DatePicker
+                value={form.requested_delivery_date}
+                onChange={(val) => setForm({ ...form, requested_delivery_date: val })}
+                placeholder="Pick delivery date"
+              />
             </div>
           </div>
 
