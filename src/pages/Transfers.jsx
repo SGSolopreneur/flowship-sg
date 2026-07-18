@@ -141,9 +141,9 @@ export default function Transfers() {
     }
   };
 
-  // Guided flow: Start picking → advances to "picking" and opens the picking checklist
+  // Guided flow: Start picking → confirms (if draft) and advances to "picking", opens the picking checklist
   const handleStartPicking = (order) => {
-    if (order.status === "confirmed") {
+    if (order.status === "draft" || order.status === "confirmed") {
       updateMutation.mutate({ id: order.id, data: { status: "picking" } });
     }
     setPickingOrder(order);
@@ -337,16 +337,10 @@ export default function Transfers() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              {/* Draft → Confirm */}
-                              {canWrite && order.status === "draft" && (
-                                <DropdownMenuItem onClick={() => advanceStatus(order)} className="text-blue-600 font-medium">
-                                  <ArrowRight className="w-3.5 h-3.5 mr-1.5" /> Confirm Order
-                                </DropdownMenuItem>
-                              )}
-                              {/* Confirmed → Start Picking */}
-                              {canWrite && order.status === "confirmed" && (
+                              {/* Draft or Confirmed → Start Picking */}
+                              {canWrite && (order.status === "draft" || order.status === "confirmed") && (
                                 <DropdownMenuItem onClick={() => handleStartPicking(order)} className="text-blue-600 font-medium">
-                                  <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Start Picking
+                                  <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Confirm & Start Picking
                                 </DropdownMenuItem>
                               )}
                               {/* Picking → Verify Shipment */}
