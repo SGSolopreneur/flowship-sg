@@ -122,22 +122,22 @@ export default function ShipmentVerifier({ open, onOpenChange, transfer, onMarkD
             </div>
 
             {allChecked && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 space-y-3">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
                 <div className="text-center">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
                   <p className="text-sm font-semibold text-emerald-700">All items verified!</p>
                   <p className="text-xs text-emerald-600">Shipment is ready to dispatch.</p>
                 </div>
-                {onMarkDispatched && (
-                  <Button onClick={() => onMarkDispatched(transfer)} className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2">
-                    <Truck className="w-4 h-4" /> Mark as Dispatched
-                  </Button>
-                )}
               </div>
             )}
 
-            <div className="flex justify-end pt-1">
-              <Button variant="outline" onClick={handleClose}>Close</Button>
+            <div className="flex gap-2 pt-1">
+              <Button variant="outline" onClick={handleClose} className="flex-1">Close</Button>
+              {allChecked && onMarkDispatched && (
+                <Button onClick={() => onMarkDispatched(transfer)} className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-2">
+                  <Truck className="w-4 h-4" /> Mark as Dispatched
+                </Button>
+              )}
             </div>
           </div>
         </DialogContent>
