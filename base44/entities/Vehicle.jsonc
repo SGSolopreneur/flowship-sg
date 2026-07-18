@@ -1,0 +1,73 @@
+{
+  "name": "Vehicle",
+  "type": "object",
+  "properties": {
+    "plate_number": {
+      "type": "string",
+      "description": "Vehicle registration plate number"
+    },
+    "vehicle_type": {
+      "type": "string",
+      "enum": [
+        "van",
+        "truck",
+        "lorry",
+        "container"
+      ],
+      "description": "Type of vehicle"
+    },
+    "weight_capacity_kg": {
+      "type": "number",
+      "description": "Maximum weight capacity in kilograms"
+    },
+    "volume_capacity_m3": {
+      "type": "number",
+      "description": "Maximum volume capacity in cubic meters"
+    },
+    "driver_name": {
+      "type": "string",
+      "description": "Assigned driver name"
+    },
+    "driver_phone": {
+      "type": "string",
+      "description": "Driver contact phone number"
+    },
+    "driver_email": {
+      "type": "string",
+      "description": "Driver email address"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "maintenance",
+        "unavailable"
+      ],
+      "default": "active",
+      "description": "Vehicle operational status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "last_latitude": {
+      "type": "number",
+      "description": "Last reported latitude"
+    },
+    "last_longitude": {
+      "type": "number",
+      "description": "Last reported longitude"
+    },
+    "last_location_update": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last location update"
+    }
+  },
+  "required": [
+    "plate_number",
+    "vehicle_type",
+    "weight_capacity_kg",
+    "volume_capacity_m3"
+  ]
+}

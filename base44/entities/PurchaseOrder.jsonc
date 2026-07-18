@@ -1,0 +1,115 @@
+{
+  "name": "PurchaseOrder",
+  "type": "object",
+  "properties": {
+    "po_number": {
+      "type": "string",
+      "description": "Purchase order number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_approval",
+        "submitted",
+        "approved",
+        "rejected",
+        "ordered",
+        "received",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "PO status"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "auto_reorder"
+      ],
+      "default": "manual",
+      "description": "How the PO was created"
+    },
+    "items": {
+      "type": "array",
+      "description": "Line items in this PO",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "unit_cost": {
+            "type": "number"
+          },
+          "supplier": {
+            "type": "string"
+          },
+          "lead_time_days": {
+            "type": "number"
+          },
+          "min_order_quantity": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "total_value": {
+      "type": "number",
+      "description": "Estimated total value in SGD"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "Email of user who triggered the reorder"
+    },
+    "procurement_manager_email": {
+      "type": "string",
+      "description": "Email of procurement manager notified"
+    },
+    "flagged": {
+      "type": "boolean",
+      "description": "Whether this PO was flagged for manual review",
+      "default": false
+    },
+    "flagged_reason": {
+      "type": "string",
+      "description": "Human-readable reason why this PO was flagged"
+    },
+    "approval_token": {
+      "type": "string",
+      "description": "Signed token for email-based approval link"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email of approver (set when approved via email link)"
+    },
+    "approved_at": {
+      "type": "string",
+      "description": "ISO timestamp of approval/rejection"
+    },
+    "rejection_reason": {
+      "type": "string",
+      "description": "Reason for rejection if rejected"
+    }
+  },
+  "required": [
+    "po_number",
+    "status"
+  ]
+}

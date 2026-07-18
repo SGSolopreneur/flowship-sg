@@ -1,0 +1,95 @@
+{
+  "name": "StockRequest",
+  "type": "object",
+  "properties": {
+    "request_number": {
+      "type": "string",
+      "description": "Unique request number"
+    },
+    "store_id": {
+      "type": "string",
+      "description": "Requesting store ID"
+    },
+    "store_name": {
+      "type": "string",
+      "description": "Requesting store name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_approval",
+        "approved",
+        "rejected",
+        "fulfilled"
+      ],
+      "default": "pending_approval",
+      "description": "Approval status"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "items": {
+      "type": "array",
+      "description": "Requested items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "quantity_requested": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requested_delivery_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "Email of person who submitted"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Email of manager who approved/rejected"
+    },
+    "review_notes": {
+      "type": "string",
+      "description": "Manager comments on the decision"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "description": "Timestamp of review decision"
+    },
+    "transfer_order_id": {
+      "type": "string",
+      "description": "Linked TransferOrder ID after approval"
+    }
+  },
+  "required": [
+    "request_number",
+    "store_id",
+    "store_name"
+  ]
+}

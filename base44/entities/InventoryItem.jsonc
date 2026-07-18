@@ -1,0 +1,67 @@
+{
+  "name": "InventoryItem",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "description": "Reference to Product"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product name for quick reference"
+    },
+    "sku": {
+      "type": "string",
+      "description": "SKU for quick reference"
+    },
+    "location_type": {
+      "type": "string",
+      "enum": [
+        "warehouse",
+        "store"
+      ],
+      "description": "Whether this inventory is at warehouse or store"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Store ID if at store, or 'warehouse' for warehouse"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Name of the location"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Current stock quantity"
+    },
+    "storage_zone": {
+      "type": "string",
+      "enum": [
+        "ambient",
+        "chilled",
+        "frozen"
+      ],
+      "description": "Storage zone"
+    },
+    "batch_number": {
+      "type": "string",
+      "description": "Batch or lot number"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expiry date of this batch"
+    },
+    "last_restocked": {
+      "type": "string",
+      "format": "date",
+      "description": "Last restock date"
+    }
+  },
+  "required": [
+    "product_id",
+    "product_name",
+    "location_type",
+    "quantity"
+  ]
+}

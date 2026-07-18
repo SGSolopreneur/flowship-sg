@@ -1,0 +1,81 @@
+{
+  "name": "ActivityLog",
+  "type": "object",
+  "properties": {
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "stock_adjustment",
+        "transfer_created",
+        "transfer_status_update",
+        "transfer_cancelled",
+        "user_invited",
+        "user_updated",
+        "product_created",
+        "product_updated",
+        "product_deleted",
+        "inventory_created",
+        "inventory_updated",
+        "inventory_deleted",
+        "store_created",
+        "store_updated",
+        "store_deleted",
+        "vehicle_created",
+        "vehicle_updated",
+        "vehicle_deleted",
+        "po_created",
+        "po_approved",
+        "po_rejected"
+      ],
+      "description": "Type of action performed"
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Type of entity affected (e.g., InventoryItem, TransferOrder)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the affected entity"
+    },
+    "entity_name": {
+      "type": "string",
+      "description": "Human-readable name/identifier of the entity"
+    },
+    "performed_by": {
+      "type": "string",
+      "description": "Email of user who performed the action"
+    },
+    "performed_by_name": {
+      "type": "string",
+      "description": "Name of user who performed the action"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the action"
+    },
+    "details": {
+      "type": "object",
+      "description": "Additional structured data about the action"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address of the user"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "low",
+      "description": "Severity level of the action"
+    }
+  },
+  "required": [
+    "action_type",
+    "performed_by",
+    "description"
+  ]
+}

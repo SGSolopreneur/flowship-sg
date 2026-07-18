@@ -1,0 +1,136 @@
+{
+  "name": "TransferOrder",
+  "type": "object",
+  "properties": {
+    "order_number": {
+      "type": "string",
+      "description": "Transfer order number"
+    },
+    "store_id": {
+      "type": "string",
+      "description": "Destination store ID"
+    },
+    "store_name": {
+      "type": "string",
+      "description": "Destination store name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "confirmed",
+        "picking",
+        "dispatched",
+        "in_transit",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "Order status"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal",
+      "description": "Order priority"
+    },
+    "items": {
+      "type": "array",
+      "description": "Items in this transfer",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "quantity_requested": {
+            "type": "number"
+          },
+          "quantity_picked": {
+            "type": "number"
+          },
+          "quantity_received": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requested_delivery_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Requested delivery date"
+    },
+    "actual_delivery_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Actual delivery date"
+    },
+    "dispatch_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Dispatch date from warehouse"
+    },
+    "vehicle_id": {
+      "type": "string",
+      "description": "Reference to assigned Vehicle"
+    },
+    "vehicle_plate_number": {
+      "type": "string",
+      "description": "Vehicle plate number for quick reference"
+    },
+    "driver_name": {
+      "type": "string",
+      "description": "Driver assigned"
+    },
+    "total_weight_kg": {
+      "type": "number",
+      "description": "Total shipment weight in kg"
+    },
+    "total_volume_m3": {
+      "type": "number",
+      "description": "Total shipment volume in cubic meters"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "total_items_count": {
+      "type": "number",
+      "description": "Total number of line items"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of person who received the delivery"
+    },
+    "signature_url": {
+      "type": "string",
+      "description": "URL to customer signature image"
+    },
+    "delivery_photos": {
+      "type": "array",
+      "description": "URLs of delivery photos",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "order_number",
+    "store_id",
+    "store_name"
+  ]
+}

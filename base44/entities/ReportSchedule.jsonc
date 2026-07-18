@@ -1,0 +1,82 @@
+{
+  "name": "ReportSchedule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Report schedule name"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "monthly"
+      ],
+      "description": "Type of report"
+    },
+    "frequency_day": {
+      "type": "string",
+      "enum": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "description": "Day of week for weekly reports"
+    },
+    "frequency_date": {
+      "type": "number",
+      "description": "Day of month for monthly reports (1-31)"
+    },
+    "send_time": {
+      "type": "string",
+      "description": "Time to send report (HH:MM format)"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email addresses of recipients"
+    },
+    "include_sections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "stock_levels",
+          "movement_trends",
+          "low_stock_alerts",
+          "supplier_performance"
+        ]
+      },
+      "description": "Sections to include in report"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active",
+      "description": "Whether this schedule is active"
+    },
+    "last_sent": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last sent report"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    }
+  },
+  "required": [
+    "name",
+    "report_type",
+    "recipients"
+  ]
+}

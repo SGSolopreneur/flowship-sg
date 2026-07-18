@@ -7,6 +7,10 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ActivityLog from './pages/ActivityLog';
+import ProcurementRequests from './pages/ProcurementRequests';
+import ExpiryManagement from './pages/ExpiryManagement';
+import StorePerformance from './pages/StorePerformance';
+import SystemSettings from './pages/SystemSettings';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -61,6 +65,26 @@ const AuthenticatedApp = () => {
       <Route path="/ActivityLog" element={
         <LayoutWrapper currentPageName="ActivityLog">
           <ActivityLog />
+        </LayoutWrapper>
+      } />
+      <Route path="/procurement" element={
+        <LayoutWrapper currentPageName="procurement">
+          <ProcurementRequests />
+        </LayoutWrapper>
+      } />
+      <Route path="/expiry-management" element={
+        <LayoutWrapper currentPageName="expiry-management">
+          <ExpiryManagement />
+        </LayoutWrapper>
+      } />
+      <Route path="/store-performance" element={
+        <LayoutWrapper currentPageName="store-performance">
+          <StorePerformance />
+        </LayoutWrapper>
+      } />
+      <Route path="/settings" element={
+        <LayoutWrapper currentPageName="settings">
+          <SystemSettings />
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />

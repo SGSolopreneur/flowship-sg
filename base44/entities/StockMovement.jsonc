@@ -1,0 +1,67 @@
+{
+  "name": "StockMovement",
+  "type": "object",
+  "properties": {
+    "inventory_item_id": {
+      "type": "string",
+      "description": "Reference to InventoryItem"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product name for quick reference"
+    },
+    "sku": {
+      "type": "string",
+      "description": "SKU for quick reference"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Location name for quick reference"
+    },
+    "adjustment_type": {
+      "type": "string",
+      "enum": [
+        "in",
+        "out",
+        "reset"
+      ],
+      "description": "Type of stock adjustment"
+    },
+    "quantity_before": {
+      "type": "number",
+      "description": "Stock quantity before the change"
+    },
+    "quantity_change": {
+      "type": "number",
+      "description": "Amount changed (positive for in, negative for out, 0 for reset)"
+    },
+    "quantity_after": {
+      "type": "number",
+      "description": "Stock quantity after the change"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual_edit",
+        "barcode_scan",
+        "form_update"
+      ],
+      "description": "How the update was triggered"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes about the movement"
+    },
+    "performed_by": {
+      "type": "string",
+      "description": "Email of the user who made the change"
+    }
+  },
+  "required": [
+    "inventory_item_id",
+    "product_name",
+    "adjustment_type",
+    "quantity_before",
+    "quantity_after"
+  ]
+}

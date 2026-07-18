@@ -1,0 +1,89 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "sku": {
+      "type": "string",
+      "description": "Stock Keeping Unit code"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "fresh_produce",
+        "frozen",
+        "dairy",
+        "beverages",
+        "dry_goods",
+        "snacks",
+        "halal_meat",
+        "seafood",
+        "bakery",
+        "household",
+        "personal_care",
+        "baby_products",
+        "ready_to_eat",
+        "condiments",
+        "other"
+      ],
+      "description": "Product category"
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "pcs",
+        "kg",
+        "g",
+        "L",
+        "mL",
+        "carton",
+        "pack",
+        "box",
+        "tray",
+        "bundle"
+      ],
+      "description": "Unit of measurement"
+    },
+    "unit_cost": {
+      "type": "number",
+      "description": "Cost per unit in SGD"
+    },
+    "min_stock_level": {
+      "type": "number",
+      "description": "Minimum stock level before reorder alert"
+    },
+    "storage_type": {
+      "type": "string",
+      "enum": [
+        "ambient",
+        "chilled",
+        "frozen"
+      ],
+      "description": "Required storage condition"
+    },
+    "shelf_life_days": {
+      "type": "number",
+      "description": "Shelf life in days"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Primary supplier name"
+    },
+    "is_halal_certified": {
+      "type": "boolean",
+      "description": "Whether the product is halal certified"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    }
+  },
+  "required": [
+    "name",
+    "sku",
+    "category"
+  ]
+}

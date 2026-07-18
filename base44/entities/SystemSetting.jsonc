@@ -1,0 +1,36 @@
+{
+  "name": "SystemSetting",
+  "type": "object",
+  "properties": {
+    "setting_key": {
+      "type": "string",
+      "description": "Unique key for this setting"
+    },
+    "setting_value": {
+      "type": "string",
+      "description": "Value stored as string; parse per setting_key"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "warehouse",
+        "reorder",
+        "general"
+      ],
+      "description": "Settings group"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this setting controls"
+    }
+  },
+  "required": [
+    "setting_key",
+    "setting_value",
+    "category"
+  ]
+}

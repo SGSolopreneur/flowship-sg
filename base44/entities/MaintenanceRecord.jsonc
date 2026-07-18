@@ -1,0 +1,68 @@
+{
+  "name": "MaintenanceRecord",
+  "type": "object",
+  "properties": {
+    "vehicle_id": {
+      "type": "string",
+      "description": "Reference to Vehicle"
+    },
+    "vehicle_plate_number": {
+      "type": "string",
+      "description": "Vehicle plate number for quick reference"
+    },
+    "maintenance_type": {
+      "type": "string",
+      "enum": [
+        "oil_change",
+        "tire_replacement",
+        "inspection",
+        "repair",
+        "battery",
+        "brake_service",
+        "filter_replacement",
+        "other"
+      ],
+      "description": "Type of maintenance"
+    },
+    "service_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when service was performed"
+    },
+    "next_service_due": {
+      "type": "string",
+      "format": "date",
+      "description": "Recommended date for next service"
+    },
+    "cost": {
+      "type": "number",
+      "description": "Cost of maintenance in SGD"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of work done"
+    },
+    "service_provider": {
+      "type": "string",
+      "description": "Name of service provider or mechanic"
+    },
+    "mileage_km": {
+      "type": "number",
+      "description": "Vehicle mileage at time of service"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "logged_by": {
+      "type": "string",
+      "description": "Email of user who logged the record"
+    }
+  },
+  "required": [
+    "vehicle_id",
+    "vehicle_plate_number",
+    "maintenance_type",
+    "service_date"
+  ]
+}

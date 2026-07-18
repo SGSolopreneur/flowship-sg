@@ -1,0 +1,62 @@
+{
+  "name": "Store",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Store name"
+    },
+    "code": {
+      "type": "string",
+      "description": "Store code identifier"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full address"
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "north",
+        "south",
+        "east",
+        "west",
+        "central"
+      ],
+      "description": "Singapore region"
+    },
+    "store_type": {
+      "type": "string",
+      "enum": [
+        "hypermarket",
+        "supermarket",
+        "minimart",
+        "express"
+      ],
+      "description": "Type of store"
+    },
+    "contact_person": {
+      "type": "string",
+      "description": "Store manager name"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "renovation"
+      ],
+      "default": "active",
+      "description": "Store operational status"
+    }
+  },
+  "required": [
+    "name",
+    "code",
+    "region"
+  ]
+}

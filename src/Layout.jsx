@@ -17,6 +17,9 @@ import {
   ShieldCheck,
   LogIn,
   Mail,
+  ClipboardCheck,
+  CalendarClock,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shared/useRole";
@@ -36,13 +39,19 @@ const navItems = [
   { name: "Supplier Performance", icon: TrendingUp, page: "SupplierPerformance", sensitive: true },
   { name: "Automated Reports", icon: BarChart2, page: "AutomatedReporting", sensitive: true },
   { name: "Analytics", icon: BarChart2, page: "Analytics", sensitive: true },
+  { name: "Procurement", icon: ClipboardCheck, page: "procurement", sensitive: true },
+  { name: "Expiry Management", icon: CalendarClock, page: "expiry-management", sensitive: false },
+  { name: "Store Performance", icon: TrendingUp, page: "store-performance", sensitive: true },
   { name: "Activity Log", icon: ShieldCheck, page: "ActivityLog", sensitive: true },
+  { name: "Settings", icon: Settings, page: "settings", sensitive: true },
 ];
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { canAccessSensitive, role } = useRole();
   const visibleNavItems = navItems.filter(item => !item.sensitive || canAccessSensitive);
+  const activeNavItem = visibleNavItems.find(item => item.page === currentPageName);
+  const displayName = activeNavItem?.name || currentPageName;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex">
@@ -133,7 +142,7 @@ export default function Layout({ children, currentPageName }) {
             <Menu className="w-5 h-5" />
           </button>
           <h2 className="text-sm sm:text-base md:text-lg font-semibold text-amber-900 ml-2 lg:ml-0 truncate">
-            {currentPageName}
+            {displayName}
           </h2>
         </header>
 

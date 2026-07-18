@@ -1,0 +1,53 @@
+{
+  "name": "ExpiryAction",
+  "type": "object",
+  "properties": {
+    "inventory_item_id": {
+      "type": "string",
+      "description": "Reference to InventoryItem"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product name for quick reference"
+    },
+    "sku": {
+      "type": "string",
+      "description": "SKU"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Location name"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expiry date of the batch"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Quantity affected"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "write_off",
+        "promotional_clearing"
+      ],
+      "description": "Action taken"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    },
+    "actioned_by": {
+      "type": "string",
+      "description": "Email of user who actioned this"
+    }
+  },
+  "required": [
+    "inventory_item_id",
+    "product_name",
+    "expiry_date",
+    "action"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "name": "Supplier",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Supplier company name"
+    },
+    "code": {
+      "type": "string",
+      "description": "Supplier code identifier"
+    },
+    "contact_person": {
+      "type": "string",
+      "description": "Primary contact name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "address": {
+      "type": "string",
+      "description": "Supplier address"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country of origin"
+    },
+    "lead_time_days": {
+      "type": "number",
+      "description": "Standard lead time in days"
+    },
+    "min_order_quantity": {
+      "type": "number",
+      "description": "Minimum order quantity"
+    },
+    "payment_terms": {
+      "type": "string",
+      "enum": [
+        "cod",
+        "net_7",
+        "net_14",
+        "net_30",
+        "net_60"
+      ],
+      "description": "Payment terms"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Product categories supplied"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "on_hold"
+      ],
+      "default": "active",
+      "description": "Supplier status"
+    },
+    "performance_rating": {
+      "type": "number",
+      "description": "Performance score out of 5"
+    },
+    "on_time_delivery_pct": {
+      "type": "number",
+      "description": "On-time delivery percentage (0-100)"
+    },
+    "quality_score": {
+      "type": "number",
+      "description": "Quality score out of 5"
+    },
+    "total_orders": {
+      "type": "number",
+      "description": "Total purchase orders placed",
+      "default": 0
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    }
+  },
+  "required": [
+    "name",
+    "code"
+  ]
+}
