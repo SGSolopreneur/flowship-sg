@@ -141,6 +141,27 @@ export default function Transfers() {
     }
   };
 
+  // Guided flow: Start picking → advances to "picking" and opens the picking checklist
+  const handleStartPicking = (order) => {
+    if (order.status === "confirmed") {
+      updateMutation.mutate({ id: order.id, data: { status: "picking" } });
+    }
+    setPickingOrder(order);
+  };
+
+  // Guided flow: After all items picked → proceed to scan/verify
+  const handleProceedToVerify = (order) => {
+    setPickingOrder(null);
+    setVerifierOrder(order);
+  };
+
+  // Guided flow: After all items verified → mark as dispatched
+  const handleMarkDispatched = (order) => {
+    const updates = { status: "dispatched", dispatch_date: new Date().toISOString().split("T")[0] };
+    updateMutation.mutate({ id: order.id, data: updates });
+    setVerifierOrder(null);
+  };
+
   const cancelOrder = (order) => {
     updateMutation.mutate({ id: order.id, data: { status: "cancelled" } });
   };
@@ -316,8 +337,8 @@ export default function Transfers() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => setPickingOrder(order)}>
-                                <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Picking List
+                              <DropdownMenuItem onClick={() => handleStartPicking(order)}>
+                                <ListChecks className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Start Picking
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => setVerifierOrder(order)}>
                                 <PackageCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Verify Shipment
@@ -390,6 +411,7 @@ export default function Transfers() {
         open={!!verifierOrder}
         onOpenChange={(o) => { if (!o) setVerifierOrder(null); }}
         transfer={verifierOrder}
+        onMarkDispatched={handleMarkDispatched}
       />
 
       {scannerOpen && (
@@ -404,6 +426,7 @@ export default function Transfers() {
         onOpenChange={(o) => { if (!o) setPickingOrder(null); }}
         transfer={pickingOrder}
         inventory={inventory}
+        onProceedToVerify={handleProceedToVerify}
       />
 
       {/* Capacity Warning Dialog */}

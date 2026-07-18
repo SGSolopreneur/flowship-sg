@@ -2,11 +2,11 @@ import React, { useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Circle, ScanLine, Package, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Circle, ScanLine, Package, AlertTriangle, Truck } from "lucide-react";
 import BarcodeScanner from "../inventory/BarcodeScanner";
 import { cn } from "@/lib/utils";
 
-export default function ShipmentVerifier({ open, onOpenChange, transfer }) {
+export default function ShipmentVerifier({ open, onOpenChange, transfer, onMarkDispatched }) {
   const [checkedSkus, setCheckedSkus] = useState({});
   const [scannerOpen, setScannerOpen] = useState(false);
   const [lastScan, setLastScan] = useState(null); // { sku, found }
@@ -122,10 +122,17 @@ export default function ShipmentVerifier({ open, onOpenChange, transfer }) {
             </div>
 
             {allChecked && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
-                <p className="text-sm font-semibold text-emerald-700">All items verified!</p>
-                <p className="text-xs text-emerald-600">Shipment is ready to dispatch.</p>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 space-y-3">
+                <div className="text-center">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
+                  <p className="text-sm font-semibold text-emerald-700">All items verified!</p>
+                  <p className="text-xs text-emerald-600">Shipment is ready to dispatch.</p>
+                </div>
+                {onMarkDispatched && (
+                  <Button onClick={() => onMarkDispatched(transfer)} className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2">
+                    <Truck className="w-4 h-4" /> Mark as Dispatched
+                  </Button>
+                )}
               </div>
             )}
 

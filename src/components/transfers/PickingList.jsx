@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Wind, Thermometer, Snowflake, CheckSquare, Square, Printer, ArrowRight, Package } from "lucide-react";
+import { Wind, Thermometer, Snowflake, CheckSquare, Square, Printer, ArrowRight, Package, ScanLine } from "lucide-react";
 import { format } from "date-fns";
 
 // Same rack mapping logic as the floor plan
@@ -91,7 +91,7 @@ function PickingRow({ item, checked, onToggle }) {
   );
 }
 
-export default function PickingList({ open, onOpenChange, transfer, inventory }) {
+export default function PickingList({ open, onOpenChange, transfer, inventory, onProceedToVerify }) {
   const [checked, setChecked] = useState({});
 
   const groups = useMemo(() => {
@@ -255,9 +255,16 @@ export default function PickingList({ open, onOpenChange, transfer, inventory })
 
         {/* Footer */}
         {allDone && (
-          <div className="flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-            <CheckSquare className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <p className="text-sm font-medium text-emerald-700">All items picked — ready for dispatch!</p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+            <div className="flex items-center gap-2 flex-1">
+              <CheckSquare className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+              <p className="text-sm font-medium text-emerald-700">All items picked — ready for verification!</p>
+            </div>
+            {onProceedToVerify && (
+              <Button onClick={() => onProceedToVerify(transfer)} className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
+                <ScanLine className="w-4 h-4 mr-1.5" /> Scan & Verify
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>
