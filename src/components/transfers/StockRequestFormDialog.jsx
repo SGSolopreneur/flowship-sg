@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
-import DatePicker from "../shared/DatePicker";
 
 export default function StockRequestFormDialog({ open, onOpenChange, stores, products, onSave, saving }) {
   const [form, setForm] = useState({
@@ -31,21 +27,23 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
     }
   }, [open]);
 
-  const handleStoreChange = (storeId) => {
+  const handleStoreChange = (e) => {
+    const storeId = e.target.value;
     const store = stores.find(s => s.id === storeId);
     setForm({ ...form, store_id: storeId, store_name: store?.name || "" });
   };
 
-  const handleProductChange = (index, productId) => {
+  const handleProductChange = (index, e) => {
+    const productId = e.target.value;
     const product = products.find(p => p.id === productId);
     const newItems = [...form.items];
     newItems[index] = { ...newItems[index], product_id: productId, product_name: product?.name || "", sku: product?.sku || "", unit: product?.unit || "pcs" };
     setForm({ ...form, items: newItems });
   };
 
-  const handleQtyChange = (index, qty) => {
+  const handleQtyChange = (index, e) => {
     const newItems = [...form.items];
-    newItems[index] = { ...newItems[index], quantity_requested: qty };
+    newItems[index] = { ...newItems[index], quantity_requested: e.target.value };
     setForm({ ...form, items: newItems });
   };
 
@@ -61,6 +59,8 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
     onSave({ ...form, request_number: requestNumber, status: "pending_approval", items });
   };
 
+  const inputClass = "w-full h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
@@ -70,35 +70,26 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Store *</Label>
-              <Select value={form.store_id} onValueChange={handleStoreChange} required>
-                <SelectTrigger><SelectValue placeholder="Select your store" /></SelectTrigger>
-                <SelectContent>
-                  {stores.filter(s => s.status === "active").map(s => (
-                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="sr-store">Store *</Label>
+              <select id="sr-store" className={inputClass} value={form.store_id} onChange={handleStoreChange} required>
+                <option value="">Select your store</option>
+                {stores.filter(s => s.status === "active").map(s => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
             </div>
             <div>
-              <Label>Priority</Label>
-              <Select value={form.priority} onValueChange={v => setForm({ ...form, priority: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="sr-priority">Priority</Label>
+              <select id="sr-priority" className={inputClass} value={form.priority} onChange={e => setForm({ ...form, priority: e.target.value })}>
+                <option value="low">Low</option>
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
             </div>
             <div className="col-span-2">
-              <Label>Requested Delivery Date</Label>
-              <DatePicker
-                value={form.requested_delivery_date}
-                onChange={(val) => setForm({ ...form, requested_delivery_date: val })}
-                placeholder="Pick delivery date"
-              />
+              <Label htmlFor="sr-date">Requested Delivery Date</Label>
+              <input id="sr-date" type="date" className={inputClass} value={form.requested_delivery_date} onChange={e => setForm({ ...form, requested_delivery_date: e.target.value })} />
             </div>
           </div>
 
@@ -114,16 +105,14 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
                 <div key={index} className="flex gap-2 items-end">
                   <div className="flex-1">
                     {index === 0 && <Label className="text-xs text-slate-500">Product</Label>}
-                    <Select value={item.product_id} onValueChange={v => handleProductChange(index, v)}>
-                      <SelectTrigger className="text-xs"><SelectValue placeholder="Select product" /></SelectTrigger>
-                      <SelectContent>
-                        {products.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                    <select className={`${inputClass} text-xs`} value={item.product_id} onChange={e => handleProductChange(index, e)}>
+                      <option value="">Select product</option>
+                      {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    </select>
                   </div>
                   <div className="w-24">
                     {index === 0 && <Label className="text-xs text-slate-500">Qty</Label>}
-                    <Input type="number" value={item.quantity_requested} onChange={e => handleQtyChange(index, e.target.value)} placeholder="0" className="text-xs" />
+                    <input type="number" className={`${inputClass} text-xs`} value={item.quantity_requested} onChange={e => handleQtyChange(index, e)} placeholder="0" />
                   </div>
                   <Button type="button" variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => removeItem(index)} disabled={form.items.length <= 1}>
                     <Trash2 className="w-3.5 h-3.5 text-red-400" />
@@ -134,8 +123,8 @@ export default function StockRequestFormDialog({ open, onOpenChange, stores, pro
           </div>
 
           <div>
-            <Label>Notes / Reason</Label>
-            <Textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} placeholder="Optional justification for the request..." />
+            <Label htmlFor="sr-notes">Notes / Reason</Label>
+            <textarea id="sr-notes" className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40" rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} placeholder="Optional justification for the request..." />
           </div>
 
           <DialogFooter>
