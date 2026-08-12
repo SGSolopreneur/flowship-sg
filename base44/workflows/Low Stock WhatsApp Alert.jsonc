@@ -1,0 +1,45 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 */4 * * *",
+      "one_time_date": null,
+      "timezone": "Asia/Singapore",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "low_stock_whatsapp_alert",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_and_notify": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkLowStockWhatsApp",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Check stock & send WhatsApp",
+            "description": "Detects low-stock items and notifies the manager"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Low Stock WhatsApp Alert",
+  "description": "Checks warehouse stock every 4 hours and sends a WhatsApp alert to the manager for any items below their minimum level"
+}

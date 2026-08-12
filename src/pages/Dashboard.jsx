@@ -5,6 +5,7 @@ import { Package, Store, Truck, AlertTriangle, ShoppingCart, FileDown } from "lu
 import { Button } from "@/components/ui/button";
 import StatCard from "../components/dashboard/StatCard";
 import LowStockAlert from "../components/dashboard/LowStockAlert";
+import WhatsAppAlertBanner from "../components/dashboard/WhatsAppAlertBanner";
 import RecentTransfers from "../components/dashboard/RecentTransfers";
 import CategoryBreakdown from "../components/dashboard/CategoryBreakdown";
 import ReorderSuggestions from "../components/dashboard/ReorderSuggestions";
@@ -80,6 +81,9 @@ export default function Dashboard() {
         <StatCard title="Pending Transfers" value={pendingTransfers} icon={Truck} color="amber" subtitle="In progress" to="/Transfers" />
         <StatCard title="Low Stock" value={lowStockCount} icon={AlertTriangle} color="red" subtitle="Need attention" to="/Inventory" />
       </div>
+
+      {/* WhatsApp alert automation */}
+      <WhatsAppAlertBanner lowStockCount={lowStockCount} />
 
       {/* Vehicle Map */}
       <div>
