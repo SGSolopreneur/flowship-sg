@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { MessageCircle, Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { MessageCircle, Send, Loader2, CheckCircle, AlertCircle, Link2 } from "lucide-react";
 import { useRole } from "@/components/shared/useRole";
 
 export default function WhatsAppAlertBanner({ lowStockCount }) {
@@ -23,13 +23,15 @@ export default function WhatsAppAlertBanner({ lowStockCount }) {
     }
   };
 
+  const whatsappUrl = base44.agents.getWhatsAppConnectURL("stock_alert_agent");
+
   return (
     <div className="bg-white rounded-xl border border-emerald-200 p-4 flex flex-col sm:flex-row sm:items-center gap-3 shadow-sm">
       <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
         <MessageCircle className="w-5 h-5 text-emerald-600" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+        <p className="text-sm font-semibold text-slate-800 flex items-center gap-2 flex-wrap">
           WhatsApp Low-Stock Alert
           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
             Auto · every 4h
@@ -48,20 +50,35 @@ export default function WhatsAppAlertBanner({ lowStockCount }) {
             {result.success ? <CheckCircle className="w-3.5 h-3.5 shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 shrink-0" />}
             <span className="truncate">
               {result.success
-                ? `Sent: ${result.itemCount} low-stock item(s)`
-                : result.error || "Failed to send — check WhatsApp secrets in Settings."}
+                ? result.deliveryMethod === "whatsapp"
+                  ? `WhatsApp alert sent: ${result.itemCount} item(s)`
+                  : result.deliveryMethod === "no_conversation"
+                    ? "No WhatsApp connected yet — use the Connect button."
+                    : `Checked: ${result.itemCount} item(s) · ${result.deliveryMethod}`
+                : result.error || "Failed to send."}
             </span>
           </p>
         )}
       </div>
-      <button
-        onClick={handleTest}
-        disabled={sending}
-        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 shrink-0"
-      >
-        {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-        {sending ? "Sending…" : "Test Alert"}
-      </button>
+      <div className="flex items-center gap-2 shrink-0">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-emerald-300 text-emerald-700 text-sm font-medium hover:bg-emerald-50"
+        >
+          <Link2 className="w-4 h-4" />
+          Connect
+        </a>
+        <button
+          onClick={handleTest}
+          disabled={sending}
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
+        >
+          {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {sending ? "Sending…" : "Test Alert"}
+        </button>
+      </div>
     </div>
   );
 }
