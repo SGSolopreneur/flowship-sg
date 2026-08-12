@@ -58,9 +58,28 @@ const TIMEZONES = [
   "Pacific/Auckland",
 ];
 
+const CURRENCIES = [
+  "SGD",
+  "MYR",
+  "THB",
+  "IDR",
+  "PHP",
+  "HKD",
+  "CNY",
+  "JPY",
+  "KRW",
+  "INR",
+  "AED",
+  "AUD",
+  "GBP",
+  "EUR",
+  "USD",
+];
+
 function SettingsField({ setting, value, onChange, saving }) {
   const isToggle = setting.setting_key.startsWith("enable_");
   const isTimezone = setting.setting_key === "timezone";
+  const isCurrency = setting.setting_key === "currency";
 
   if (isToggle) {
     return (
@@ -88,6 +107,23 @@ function SettingsField({ setting, value, onChange, saving }) {
           <SelectContent>
             {TIMEZONES.map(tz => (
               <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
+
+  if (isCurrency) {
+    return (
+      <div className="py-2">
+        <Label className="text-sm font-medium text-slate-700">{setting.label}</Label>
+        <p className="text-xs text-slate-400 mb-1.5">{setting.description}</p>
+        <Select value={value} onValueChange={onChange} disabled={saving}>
+          <SelectTrigger className="max-w-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {CURRENCIES.map(c => (
+              <SelectItem key={c} value={c}>{c}</SelectItem>
             ))}
           </SelectContent>
         </Select>
