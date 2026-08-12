@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,12 +6,23 @@ import { CheckCircle2, Circle, ScanLine, Package, AlertTriangle, Truck } from "l
 import BarcodeScanner from "../inventory/BarcodeScanner";
 import { cn } from "@/lib/utils";
 
-export default function ShipmentVerifier({ open, onOpenChange, transfer, onMarkDispatched }) {
+export default function ShipmentVerifier({ open, onOpenChange, transfer, onMarkDispatched, dispatching }) {
   const [checkedSkus, setCheckedSkus] = useState({});
   const [scannerOpen, setScannerOpen] = useState(false);
   const [lastScan, setLastScan] = useState(null); // { sku, found }
 
   const items = transfer?.items || [];
+
+  // Reset verification state every time the dialog opens or the transfer changes.
+  // Radix Dialog does NOT call onOpenChange when `open` flips to false programmatically
+  // (e.g. after dispatch), so handleClose alone leaves stale checkedSkus behind —
+  // which would make allChecked unreachable on the next order.
+  useEffect(() => {
+    if (open) {
+      setCheckedSkus({});
+      setLastScan(null);
+    }
+  }, [open, transfer?.id]);
 
   const handleScan = useCallback((code) => {
     setScannerOpen(false);
@@ -134,9 +145,13 @@ export default function ShipmentVerifier({ open, onOpenChange, transfer, onMarkD
             <div className="flex gap-2 pt-1">
               <Button variant="outline" onClick={handleClose} className="flex-1">Close</Button>
               {allChecked && onMarkDispatched && (
-                <Button onClick={() => onMarkDispatched(transfer)} className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-2">
-                  <Truck className="w-4 h-4" /> Mark as Dispatched
-                </Button>
+                  <Button
+                    onClick={() => onMarkDispatched(transfer)}
+                    disabled={dispatching}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-2"
+                  >
+                    <Truck className="w-4 h-4" /> {dispatching ? "Dispatching..." : "Mark as Dispatched"}
+                  </Button>
               )}
             </div>
           </div>

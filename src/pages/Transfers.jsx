@@ -155,11 +155,26 @@ export default function Transfers() {
     setVerifierOrder(order);
   };
 
-  // Guided flow: After all items verified → mark as dispatched
-  const handleMarkDispatched = (order) => {
-    const updates = { status: "dispatched", dispatch_date: new Date().toISOString().split("T")[0] };
-    updateMutation.mutate({ id: order.id, data: updates });
-    setVerifierOrder(null);
+  // Guided flow: After all items verified → mark as dispatched.
+  // Waits for the update to succeed before closing, and records picked quantities.
+  const handleMarkDispatched = async (order) => {
+    try {
+      const items = (order.items || []).map(i => ({
+        ...i,
+        quantity_picked: i.quantity_picked ?? i.quantity_requested,
+      }));
+      await updateMutation.mutateAsync({
+        id: order.id,
+        data: {
+          status: "dispatched",
+          dispatch_date: new Date().toISOString().split("T")[0],
+          items,
+        },
+      });
+      setVerifierOrder(null);
+    } catch (e) {
+      // update failed — keep the verifier open so the user can retry
+    }
   };
 
   const cancelOrder = (order) => {
@@ -425,6 +440,7 @@ export default function Transfers() {
         onOpenChange={(o) => { if (!o) setVerifierOrder(null); }}
         transfer={verifierOrder}
         onMarkDispatched={handleMarkDispatched}
+        dispatching={updateMutation.isPending}
       />
 
       {scannerOpen && (

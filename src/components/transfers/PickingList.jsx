@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -93,6 +93,14 @@ function PickingRow({ item, checked, onToggle }) {
 
 export default function PickingList({ open, onOpenChange, transfer, inventory, onProceedToVerify }) {
   const [checked, setChecked] = useState({});
+
+  // Reset picked state when the dialog opens for a (different) transfer — the same
+  // stale-state issue as the ShipmentVerifier (programmatic close skips onOpenChange).
+  useEffect(() => {
+    if (open) {
+      setChecked({});
+    }
+  }, [open, transfer?.id]);
 
   const groups = useMemo(() => {
     if (!transfer?.items) return {};
