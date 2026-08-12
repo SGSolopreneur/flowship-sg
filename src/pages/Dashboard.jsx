@@ -10,6 +10,7 @@ import RecentTransfers from "../components/dashboard/RecentTransfers";
 import CategoryBreakdown from "../components/dashboard/CategoryBreakdown";
 import ReorderSuggestions from "../components/dashboard/ReorderSuggestions";
 import ExpiryAlert from "../components/dashboard/ExpiryAlert";
+import ExpiringSoonBanner from "../components/dashboard/ExpiringSoonBanner";
 import VehicleMap from "../components/dashboard/VehicleMap";
 import { generateStockSummaryPDF } from "../components/shared/PdfReportGenerator";
 
@@ -84,6 +85,9 @@ export default function Dashboard() {
 
       {/* WhatsApp alert automation */}
       <WhatsAppAlertBanner lowStockCount={lowStockCount} />
+
+      {/* Expiring within 7 days — prominent warning */}
+      <ExpiringSoonBanner inventory={inventory} linkTo="/expiry-management" />
 
       {/* Vehicle Map */}
       <div>

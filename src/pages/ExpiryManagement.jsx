@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Search, Clock, AlertTriangle, Trash2, Tag, CalendarClock } from "lucide-react";
 import EmptyState from "../components/shared/EmptyState";
+import ExpiringSoonBanner from "../components/dashboard/ExpiringSoonBanner";
 import { useRole } from "../components/shared/useRole";
 import { format, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -91,6 +92,10 @@ export default function ExpiryManagement() {
     const s = getExpiryStatus(i.expiry_date);
     return s.daysLeft >= 0 && s.daysLeft <= 3;
   }).length;
+  const expiringSoonCount = inventory.filter(i => {
+    const s = getExpiryStatus(i.expiry_date);
+    return s.daysLeft >= 0 && s.daysLeft <= 7;
+  }).length;
 
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-4 w-full">
@@ -102,8 +107,11 @@ export default function ExpiryManagement() {
         <p className="text-xs text-amber-700">Track products nearing shelf-life limits and log disposals or clearances</p>
       </div>
 
+      {/* 7-day expiry warning */}
+      <ExpiringSoonBanner inventory={inventory} />
+
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="bg-white rounded-lg border border-orange-200 p-3">
           <p className="text-xs text-slate-600">Expired</p>
           <p className="text-xl font-bold text-red-600 mt-1">{expiredCount}</p>
@@ -111,6 +119,10 @@ export default function ExpiryManagement() {
         <div className="bg-white rounded-lg border border-orange-200 p-3">
           <p className="text-xs text-slate-600">Critical (≤3 days)</p>
           <p className="text-xl font-bold text-amber-600 mt-1">{criticalCount}</p>
+        </div>
+        <div className="bg-amber-50 rounded-lg border border-amber-300 p-3">
+          <p className="text-xs text-amber-700 font-medium">Expiring ≤7 days</p>
+          <p className="text-xl font-bold text-amber-700 mt-1">{expiringSoonCount}</p>
         </div>
         <div className="bg-white rounded-lg border border-orange-200 p-3">
           <p className="text-xs text-slate-600">Tracked Items</p>
@@ -180,9 +192,24 @@ export default function ExpiryManagement() {
                   const status = getExpiryStatus(item.expiry_date);
                   const isActioned = actionedIds.has(item.id);
                   return (
-                    <TableRow key={item.id} className={cn("hover:bg-orange-50/30", status.urgent && !isActioned && "bg-red-50/20")}>
+                    <TableRow
+                      key={item.id}
+                      className={cn(
+                        "hover:bg-orange-50/30",
+                        status.urgent && !isActioned && "bg-red-50/20",
+                        status.daysLeft != null && status.daysLeft >= 0 && status.daysLeft <= 7 && !isActioned && "border-l-4 border-l-amber-400"
+                      )}
+                    >
                       <TableCell>
-                        <div className="text-sm font-medium text-slate-800">{item.product_name}</div>
+                        <div className="flex items-center gap-1.5">
+                          {status.daysLeft != null && status.daysLeft >= 0 && status.daysLeft <= 7 && !isActioned && (
+                            <span className="relative flex h-2.5 w-2.5 shrink-0">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                            </span>
+                          )}
+                          <div className="text-sm font-medium text-slate-800">{item.product_name}</div>
+                        </div>
                         <div className="text-[10px] text-slate-400 font-mono">{item.sku || "—"}</div>
                       </TableCell>
                       <TableCell className="text-xs text-slate-600">
