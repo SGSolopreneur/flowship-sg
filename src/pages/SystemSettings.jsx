@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Settings, Clock, Package, Sliders, Save, Check, Palette } from "lucide-react";
@@ -35,8 +36,31 @@ const categoryConfig = {
   general: { icon: Sliders, title: "General Preferences", color: "text-emerald-600", bg: "bg-emerald-50" },
 };
 
+const TIMEZONES = [
+  "Asia/Singapore",
+  "Asia/Kuala_Lumpur",
+  "Asia/Bangkok",
+  "Asia/Jakarta",
+  "Asia/Manila",
+  "Asia/Hong_Kong",
+  "Asia/Shanghai",
+  "Asia/Tokyo",
+  "Asia/Seoul",
+  "Asia/Kolkata",
+  "Asia/Dubai",
+  "Australia/Sydney",
+  "Australia/Perth",
+  "Europe/London",
+  "Europe/Paris",
+  "Europe/Berlin",
+  "America/New_York",
+  "America/Los_Angeles",
+  "Pacific/Auckland",
+];
+
 function SettingsField({ setting, value, onChange, saving }) {
   const isToggle = setting.setting_key.startsWith("enable_");
+  const isTimezone = setting.setting_key === "timezone";
 
   if (isToggle) {
     return (
@@ -50,6 +74,23 @@ function SettingsField({ setting, value, onChange, saving }) {
           onCheckedChange={(checked) => onChange(checked ? "true" : "false")}
           disabled={saving}
         />
+      </div>
+    );
+  }
+
+  if (isTimezone) {
+    return (
+      <div className="py-2">
+        <Label className="text-sm font-medium text-slate-700">{setting.label}</Label>
+        <p className="text-xs text-slate-400 mb-1.5">{setting.description}</p>
+        <Select value={value} onValueChange={onChange} disabled={saving}>
+          <SelectTrigger className="max-w-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {TIMEZONES.map(tz => (
+              <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     );
   }
