@@ -7,10 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList, ScanLine, PackageCheck, FileDown, ListChecks } from "lucide-react";
+import { Plus, Search, Truck, MoreHorizontal, ArrowRight, Trash2, ClipboardList, ScanLine, PackageCheck, FileDown, ListChecks, List, LayoutGrid } from "lucide-react";
 import { generateTransferManifestPDF } from "../components/shared/PdfReportGenerator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import StatusBadge from "../components/shared/StatusBadge";
 import EmptyState from "../components/shared/EmptyState";
 import { useRole } from "../components/shared/useRole";
@@ -20,6 +21,7 @@ import ApprovalPanel from "../components/transfers/ApprovalPanel";
 import ShipmentVerifier from "../components/transfers/ShipmentVerifier";
 import BarcodeScanner from "../components/inventory/BarcodeScanner";
 import PickingList from "../components/transfers/PickingList";
+import TransferKanban from "../components/transfers/TransferKanban";
 import VehicleCapacityCalculator from "../components/transfers/VehicleCapacityCalculator";
 
 const statusFlow = ["draft", "confirmed", "picking", "dispatched", "in_transit", "delivered"];
@@ -33,6 +35,7 @@ export default function Transfers() {
   const [pickingOrder, setPickingOrder] = useState(null);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [capacityWarning, setCapacityWarning] = useState(null);
+  const [viewMode, setViewMode] = useState("list");
   const queryClient = useQueryClient();
 
   const { user: currentUser, canWrite, isManager } = useRole();
@@ -300,8 +303,33 @@ export default function Transfers() {
                 <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
+            <div className="flex gap-1 bg-slate-100 rounded-lg p-1 ml-auto">
+              <button
+                onClick={() => setViewMode("list")}
+                className={cn("px-2.5 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors", viewMode === "list" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700")}
+              >
+                <List className="w-3.5 h-3.5" /> List
+              </button>
+              <button
+                onClick={() => setViewMode("board")}
+                className={cn("px-2.5 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors", viewMode === "board" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700")}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" /> Board
+              </button>
+            </div>
           </div>
 
+          {viewMode === "board" ? (
+            <TransferKanban
+              transfers={filtered}
+              canWrite={canWrite}
+              onStartPicking={handleStartPicking}
+              onVerify={(o) => setVerifierOrder(o)}
+              onAdvance={advanceStatus}
+              onCancel={cancelOrder}
+              onDelete={(id) => deleteMutation.mutate(id)}
+            />
+          ) : (
           <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
             {filtered.length === 0 ? (
               <EmptyState
@@ -396,6 +424,7 @@ export default function Transfers() {
               </div>
             )}
           </div>
+          )}
         </TabsContent>
 
         <TabsContent value="requests" className="mt-0">
