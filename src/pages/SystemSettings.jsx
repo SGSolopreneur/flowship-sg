@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Settings, Clock, Package, Sliders, Save, Check } from "lucide-react";
+import { Settings, Clock, Package, Sliders, Save, Check, Palette } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
 import { toast } from "react-hot-toast";
+import { getThemes, getActiveThemeKey, setTheme } from "@/lib/theme";
+import { cn } from "@/lib/utils";
 
 // Default settings seeded on first load
 const DEFAULT_SETTINGS = [
@@ -27,6 +29,7 @@ const DEFAULT_SETTINGS = [
 ];
 
 const categoryConfig = {
+  appearance: { icon: Palette, title: "Appearance", color: "text-purple-600", bg: "bg-purple-50" },
   warehouse: { icon: Clock, title: "Warehouse Operating Hours", color: "text-blue-600", bg: "bg-blue-50" },
   reorder: { icon: Package, title: "Default Reorder Levels", color: "text-amber-600", bg: "bg-amber-50" },
   general: { icon: Sliders, title: "General Preferences", color: "text-emerald-600", bg: "bg-emerald-50" },
@@ -118,7 +121,14 @@ export default function SystemSettings() {
     setDirty(true);
   };
 
-  const categories = ["warehouse", "reorder", "general"];
+  const [activeTheme, setActiveTheme] = useState(getActiveThemeKey());
+  const categories = ["appearance", "warehouse", "reorder", "general"];
+
+  const handleThemePick = (key) => {
+    setTheme(key);
+    setActiveTheme(key);
+    toast.success("Theme updated");
+  };
 
   if (!canAccessSensitive) {
     return (
@@ -169,6 +179,51 @@ export default function SystemSettings() {
       ) : (
         categories.map(cat => {
           const config = categoryConfig[cat];
+          if (cat === "appearance") {
+            const themes = getThemes();
+            return (
+              <Card key="appearance" className="border-orange-200">
+                <div className="p-4 border-b border-orange-100 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                    <Palette className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <h2 className="text-sm font-semibold text-slate-800">Appearance</h2>
+                </div>
+                <div className="p-4">
+                  <p className="text-xs text-slate-500 mb-3">Choose a color theme for the sidebar. Your choice is saved on this device.</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {themes.map(theme => {
+                      const isSelected = theme.key === activeTheme;
+                      return (
+                        <button
+                          key={theme.key}
+                          type="button"
+                          onClick={() => handleThemePick(theme.key)}
+                          className={cn(
+                            "relative flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left",
+                            isSelected ? "border-purple-400 bg-purple-50" : "border-slate-200 hover:border-slate-300 bg-white"
+                          )}
+                        >
+                          <span
+                            className="w-9 h-9 rounded-lg shrink-0 shadow-inner"
+                            style={{ background: `linear-gradient(to bottom, ${theme.from}, ${theme.to})` }}
+                          />
+                          <span className="flex-1 min-w-0">
+                            <span className="block text-sm font-medium text-slate-800">{theme.label}</span>
+                            <span className="flex items-center gap-1 mt-0.5">
+                              <span className="w-2.5 h-2.5 rounded-full" style={{ background: theme.accent }} />
+                              <span className="text-[11px] text-slate-400 font-mono">{theme.accent}</span>
+                            </span>
+                          </span>
+                          {isSelected && <Check className="w-4 h-4 text-purple-600 absolute top-2 right-2" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
+            );
+          }
           const catSettings = Object.values(values).filter(v => v.category === cat);
           if (catSettings.length === 0) return null;
           return (

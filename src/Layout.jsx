@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shared/useRole";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
+import { getActiveTheme, applyTheme } from "@/lib/theme";
 
 // sensitive: only admin + manager can see
 const navItems = [
@@ -53,6 +54,11 @@ export default function Layout({ children, currentPageName }) {
   const activeNavItem = visibleNavItems.find(item => item.page === currentPageName);
   const displayName = activeNavItem?.name || currentPageName;
 
+  // Apply the user-chosen color theme (CSS variables) on mount.
+  useEffect(() => {
+    applyTheme(getActiveTheme());
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex">
       {/* Mobile overlay */}
@@ -66,13 +72,14 @@ export default function Layout({ children, currentPageName }) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-orange-900 to-amber-900 text-white flex flex-col transition-transform duration-300 ease-in-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-[260px] text-white flex flex-col transition-transform duration-300 ease-in-out",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
+        style={{ background: "linear-gradient(to bottom, var(--app-theme-from, #7c2d12), var(--app-theme-to, #78350f))" }}
       >
         {/* Logo */}
         <div className="h-16 flex items-center gap-3 px-5 border-b border-white/10">
-          <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--app-theme-accent, #fb923c)" }}>
             <Warehouse className="w-4.5 h-4.5 text-white" />
           </div>
           <div>
@@ -99,13 +106,14 @@ export default function Layout({ children, currentPageName }) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-orange-500/20 text-orange-300"
+                    ? "bg-white/10"
                     : "text-amber-200 hover:text-white hover:bg-white/5"
                 )}
+                style={isActive ? { color: "var(--app-theme-accent, #fb923c)" } : undefined}
               >
-                <item.icon className={cn("w-[18px] h-[18px]", isActive && "text-orange-300")} />
+                <item.icon className="w-[18px] h-[18px]" />
                 <span>{item.name}</span>
-                {isActive && <ChevronRight className="w-4 h-4 ml-auto text-orange-300/50" />}
+                {isActive && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
               </Link>
             );
           })}
